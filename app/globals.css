@@ -1,0 +1,155 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --page-bg: #faf9f7;
+  --card-bg: #ffffff;
+  --text-primary: #2d3748;
+  --text-muted: #4a5568;
+  --accent-from: #6b8e6b;
+  --accent-to: #5b7c99;
+  --border-soft: rgba(160, 174, 192, 0.25);
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --page-bg: #1a1a1a;
+  --card-bg: #252525;
+  --text-primary: #e5e7eb;
+  --text-muted: #9ca3af;
+  --accent-from: #7a9a7a;
+  --accent-to: #6b8e9f;
+  --border-soft: rgba(55, 65, 81, 0.6);
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--page-bg);
+  color: var(--text-primary);
+  font-feature-settings: 'rlig' 1, 'calt' 1;
+}
+
+::selection {
+  background-color: rgba(107, 142, 107, 0.2);
+  color: var(--text-primary);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(148, 163, 184, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--accent-from), var(--accent-to));
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  opacity: 0.85;
+}
+
+.prose {
+  color: var(--text-primary);
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  color: var(--text-primary);
+  font-family: 'Georgia', serif;
+}
+
+.prose a {
+  color: var(--accent-to);
+  text-decoration: none;
+  transition: color 0.2s ease, border-color 0.2s ease;
+  border-bottom: 1px solid transparent;
+}
+
+.prose a:hover {
+  border-bottom-color: var(--accent-to);
+}
+
+.prose blockquote {
+  border-left: 4px solid var(--accent-to);
+  background: rgba(107, 142, 107, 0.08);
+  padding: 1rem;
+  margin: 1.5rem 0;
+  border-radius: 0 12px 12px 0;
+}
+
+.prose code {
+  background: rgba(226, 232, 240, 0.8);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.9em;
+  color: var(--accent-to);
+}
+
+[data-theme='dark'] .prose code {
+  background: rgba(15, 23, 42, 0.8);
+}
+
+.prose pre {
+  background: rgba(248, 250, 252, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 12px;
+}
+
+[data-theme='dark'] .prose pre {
+  background: rgba(2, 6, 23, 0.9);
+  border-color: rgba(30, 41, 59, 0.8);
+}
+
+.prose img {
+  border-radius: 16px;
+  box-shadow: 0 18px 35px rgba(15, 23, 42, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.prose img:hover {
+  transform: scale(1.02);
+}
+
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-primary {
+  @apply px-6 py-3 rounded-lg bg-[#6b8e6b] text-white font-medium shadow-sm hover:bg-[#5a7a5a] hover:shadow-md transition-all duration-200;
+}
+
+.btn-secondary {
+  @apply px-6 py-3 rounded-lg border border-[#cbd5e0] text-[#4a5568] bg-white font-medium shadow-sm hover:bg-[#f7fafc] hover:border-[#a0aec0] transition-all duration-200 dark:border-[#4a5568] dark:text-[#e5e7eb] dark:bg-[#252525] dark:hover:bg-[#2d2d2d];
+}
+
+/* Reading Progress Bar */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 50;
+  background: rgba(226, 232, 240, 0.3);
+}
+
+.reading-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-from), var(--accent-to));
+  transition: width 0.15s ease-out;
+}
