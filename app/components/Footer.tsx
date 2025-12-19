@@ -17,9 +17,20 @@ export default function Footer() {
           <p className="text-sm text-[#4a5568] dark:text-[#9ca3af]">
             © {currentYear} · Built as a shared home for every Tejas CK blog and vlog.
           </p>
-          <p className="text-xs uppercase tracking-[0.3em] text-[#718096] dark:text-[#9ca3af]">
-            Document · Publish · Reply
-          </p>
+          <div className="flex items-center justify-center gap-4 text-xs text-[#718096] dark:text-[#9ca3af]">
+            <a 
+              href="/feed.xml" 
+              className="hover:text-[#6b8e6b] dark:hover:text-[#7a9a7a] transition-colors flex items-center gap-1"
+              title="RSS Feed"
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M6.503 20.752c0 1.794-1.456 3.248-3.251 3.248-1.796 0-3.252-1.454-3.252-3.248 0-1.794 1.456-3.248 3.252-3.248 1.795.001 3.251 1.454 3.251 3.248zm-6.503-12.572v4.811c6.05.062 10.96 4.966 11.022 11.009h4.817c-.062-8.71-7.109-15.758-15.839-15.82zm0-3.368c10.58.046 19.152 8.594 19.183 19.188h4.817c-.03-13.231-10.755-23.954-24-24v4.812z"/>
+              </svg>
+              RSS Feed
+            </a>
+            <span>·</span>
+            <span className="uppercase tracking-[0.3em]">Document · Publish · Reply</span>
+          </div>
         </div>
       </div>
     </footer>

@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/app/lib/prisma'
+import { Resend } from 'resend'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -73,6 +76,33 @@ export async function POST(request: Request) {
         approved: false, // Comments need approval
       }
     })
+
+    // Send email notification to admin
+    if (process.env.RESEND_API_KEY && process.env.ASK_RECIPIENT_1) {
+      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com'
+      const postUrl = `${siteUrl}/blog/${postSlug}`
+      
+      try {
+        await resend.emails.send({
+          from: 'Comments Bot <noreply@yourdomain.dev>',
+          to: [process.env.ASK_RECIPIENT_1],
+          subject: `New comment on: ${postSlug}`,
+          html: `
+            <h2>New Comment Awaiting Approval</h2>
+            <p><strong>Post:</strong> <a href="${postUrl}">${postSlug}</a></p>
+            <p><strong>Name:</strong> ${name}</p>
+            ${email ? `<p><strong>Email:</strong> ${email}</p>` : ''}
+            <p><strong>Message:</strong></p>
+            <p>${message.replace(/\n/g, '<br>')}</p>
+            <hr>
+            <p><a href="${siteUrl}/admin/comments">Approve or delete this comment</a></p>
+          `,
+        })
+      } catch (emailError) {
+        console.error('Failed to send comment notification email:', emailError)
+        // Don't fail the request if email fails
+      }
+    }
 
     return NextResponse.json({ ok: true, comment })
   } catch (error) {

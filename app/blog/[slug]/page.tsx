@@ -6,6 +6,8 @@ import Comments from '../../components/Comments'
 import ReadingProgress from '../../components/ReadingProgress'
 import PostLikeButton from '../../components/PostLikeButton'
 import PostTags from '../../components/PostTags'
+import SocialShare from '../../components/SocialShare'
+import PostNavigation from '../../components/PostNavigation'
 
 interface PostPageProps {
   params: {
@@ -147,6 +149,12 @@ export default async function PostPage({ params }: PostPageProps) {
           <div className="mt-8 mb-8">
             <PostLikeButton postSlug={params.slug} />
           </div>
+
+          <div className="mb-8">
+            <SocialShare title={post.title} url={`/blog/${post.slug}`} description={post.excerpt} />
+          </div>
+
+          <PostNavigation currentSlug={params.slug} />
 
           <Comments postSlug={params.slug} />
 
