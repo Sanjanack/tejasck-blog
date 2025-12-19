@@ -80,7 +80,13 @@ Your content here...
 
 3. The post will automatically appear on the blog page!
 
-## Deployment
+## 🚀 Quick Deployment
+
+**Want to go live in 5 minutes?** See [QUICK_DEPLOY.md](./QUICK_DEPLOY.md)
+
+**For detailed instructions:** See [DEPLOYMENT.md](./DEPLOYMENT.md)
+
+**Want to make it unique?** See [PROJECT_ROADMAP.md](./PROJECT_ROADMAP.md) for 40+ feature ideas!
 
 This project is optimized for Vercel deployment:
 

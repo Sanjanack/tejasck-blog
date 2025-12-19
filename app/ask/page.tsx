@@ -48,17 +48,30 @@ export default function AskPage() {
   }
 
   return (
-    <div className="pt-24 pb-16 min-h-screen bg-[#faf9f7] dark:bg-[#1a1a1a]">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="relative min-h-screen bg-[#faf9f7] dark:bg-[#1a1a1a] pt-24 pb-16">
+      {/* Animated background */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#6b8e6b]/5 blur-3xl dark:bg-[#7a9a7a]/5" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#5b7c99]/5 blur-3xl dark:bg-[#6b8e9f]/5" />
+      </div>
+      
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-4xl sm:text-5xl font-serif font-bold text-[#2d3748] dark:text-[#e5e7eb] mb-4">Ask & I'll reply on camera</h1>
-          <p className="text-base sm:text-lg text-[#4a5568] dark:text-[#9ca3af] max-w-3xl mx-auto">
-            Drop a question, request, or story idea. Your note lands straight in my inbox and in the private Ask dashboard so I can reply by email or turn it into a vlog segment.
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#cbd5e0] bg-white/80 backdrop-blur-sm px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#5b7c99] dark:border-[#4a5568] dark:bg-[#252525]/80 dark:text-[#9ca3af] mb-6">
+            Ask Me Anything
+          </div>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-[#2d3748] dark:text-[#e5e7eb] mb-4">
+            <span className="bg-gradient-to-r from-[#2d3748] to-[#6b8e6b] dark:from-[#e5e7eb] dark:to-[#7a9a7a] bg-clip-text text-transparent">
+              Ask & I'll Reply
+            </span>
+          </h1>
+          <p className="text-base sm:text-lg text-[#4a5568] dark:text-[#9ca3af] max-w-2xl mx-auto">
+            Drop a question or story idea. I'll reply by email or feature it in a vlog.
           </p>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-[2fr,1fr]">
-          <form onSubmit={onSubmit} className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-xl p-8 shadow-sm">
+          <form onSubmit={onSubmit} className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow duration-300">
             <div className="grid gap-6">
               <div>
                 <label className="block text-sm font-medium text-[#4a5568] dark:text-[#9ca3af] mb-2" htmlFor="name">Name</label>
@@ -68,7 +81,7 @@ export default function AskPage() {
                   type="text"
                   value={name}
                   onChange={(e)=>setName(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg bg-white dark:bg-[#1f1f1f] border border-[#e2e8f0] dark:border-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb] placeholder-[#a0aec0] focus:outline-none focus:ring-2 focus:ring-[#6b8e6b]"
+                  className="w-full px-4 py-3 rounded-xl bg-white dark:bg-[#1f1f1f] border border-[#e2e8f0] dark:border-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb] placeholder-[#a0aec0] focus:outline-none focus:ring-2 focus:ring-[#6b8e6b] focus:border-transparent transition-all duration-200"
                   placeholder="Your name (optional)"
                 />
               </div>
@@ -109,7 +122,7 @@ export default function AskPage() {
                   rows={6}
                   value={message}
                   onChange={(e)=>setMessage(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg bg-white dark:bg-[#1f1f1f] border border-[#e2e8f0] dark:border-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb] placeholder-[#a0aec0] focus:outline-none focus:ring-2 focus:ring-[#6b8e6b]"
+                  className="w-full px-4 py-3 rounded-xl bg-white dark:bg-[#1f1f1f] border border-[#e2e8f0] dark:border-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb] placeholder-[#a0aec0] focus:outline-none focus:ring-2 focus:ring-[#6b8e6b] focus:border-transparent transition-all duration-200 resize-none"
                   placeholder="Write your question or comment..."
                 ></textarea>
               </div>
@@ -118,8 +131,25 @@ export default function AskPage() {
                 <div className="text-xs text-[#718096] dark:text-[#9ca3af]">
                   <span className="font-semibold">Privacy:</span> email stays private, replies land in your inbox.
                 </div>
-                <button className="btn-primary" type="submit" disabled={status==='submitting'}>
-                  {status==='submitting' ? 'Sending…' : 'Send'}
+                <button 
+                  className="relative px-8 py-3 rounded-xl bg-[#6b8e6b] text-white font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 group" 
+                  type="submit" 
+                  disabled={status==='submitting'}
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    {status==='submitting' ? (
+                      <>
+                        <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                        Sending…
+                      </>
+                    ) : (
+                      'Send'
+                    )}
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#5a7a5a] to-[#6b8e6b] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </button>
               </div>
 
@@ -136,7 +166,7 @@ export default function AskPage() {
             </div>
           </form>
 
-          <aside className="rounded-xl border border-[#e2e8f0] dark:border-[#4a5568] bg-white dark:bg-[#252525] p-6 flex flex-col gap-6 shadow-sm">
+          <aside className="rounded-2xl border border-[#e2e8f0] dark:border-[#4a5568] bg-white dark:bg-[#252525] p-6 flex flex-col gap-6 shadow-lg">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#718096] dark:text-[#9ca3af]">How it works</p>
               <ul className="mt-4 space-y-4 text-sm text-[#4a5568] dark:text-[#9ca3af]">

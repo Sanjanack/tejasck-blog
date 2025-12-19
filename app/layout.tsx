@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Navbar from './components/Navbar'
@@ -7,24 +7,36 @@ import { ThemeProvider } from './components/ThemeProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com'
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: 'Tejas CK Studio · Letters & Vlogs',
   description: 'A publishing hub for Tejas CK—featuring Letters from Schmalkalden plus future travel and study vlog series.',
   keywords: ['Tejas CK', 'blog network', 'Germany vlog', 'Letters from Schmalkalden', 'study abroad'],
   authors: [{ name: 'Tejas CK Studio' }],
   openGraph: {
     title: 'Tejas CK Studio · Letters & Vlogs',
-    description: 'Letters from Schmalkalden is the first series in Tejas CK’s growing blog network.',
+    description: "Letters from Schmalkalden is the first series in Tejas CK's growing blog network.",
     type: 'website',
     locale: 'en_US',
+    url: siteUrl,
+    siteName: 'Tejas CK Studio',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Tejas CK Studio · Letters & Vlogs',
-    description: 'Letters from Schmalkalden is the first series in Tejas CK’s growing blog network.',
+    description: "Letters from Schmalkalden is the first series in Tejas CK's growing blog network.",
   },
-  viewport: 'width=device-width, initial-scale=1',
   robots: 'index, follow',
+  alternates: {
+    canonical: siteUrl,
+  },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
 }
 
 export default function RootLayout({

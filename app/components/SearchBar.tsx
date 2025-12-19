@@ -7,6 +7,10 @@ interface SearchResult {
   title: string
   excerpt: string
   date: string
+  content?: string
+  readingTime?: number
+  tags?: string[]
+  series?: string
 }
 
 interface SearchBarProps {

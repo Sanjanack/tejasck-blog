@@ -1,18 +1,29 @@
 export default function AboutPage() {
   return (
-    <div className="pt-16 min-h-screen bg-[#faf9f7] dark:bg-[#1a1a1a]">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="relative min-h-screen bg-[#faf9f7] dark:bg-[#1a1a1a] pt-16">
+      {/* Animated background */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#6b8e6b]/5 blur-3xl dark:bg-[#7a9a7a]/5" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#5b7c99]/5 blur-3xl dark:bg-[#6b8e9f]/5" />
+      </div>
+      
+      <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="text-center mb-16 animate-fade-in">
-          <h1 className="text-5xl sm:text-6xl font-serif font-bold text-[#2d3748] dark:text-[#e5e7eb] mb-6">
-            About Me
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#cbd5e0] bg-white/80 backdrop-blur-sm px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#5b7c99] dark:border-[#4a5568] dark:bg-[#252525]/80 dark:text-[#9ca3af] mb-6">
+            About the Creator
+          </div>
+          <h1 className="text-5xl sm:text-6xl font-serif font-bold text-[#2d3748] dark:text-[#e5e7eb] mb-4">
+            <span className="bg-gradient-to-r from-[#2d3748] to-[#6b8e6b] dark:from-[#e5e7eb] dark:to-[#7a9a7a] bg-clip-text text-transparent">
+              About Me
+            </span>
           </h1>
-          <div className="w-32 h-1 bg-[#6b8e6b] dark:bg-[#7a9a7a] mx-auto rounded-full"></div>
+          <div className="w-32 h-1 bg-gradient-to-r from-[#6b8e6b] to-[#5b7c99] dark:from-[#7a9a7a] dark:to-[#6b8e9f] mx-auto rounded-full"></div>
         </div>
 
         {/* Content */}
         <div className="max-w-4xl mx-auto">
-          <div className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-xl p-10 mb-12 animate-slide-up shadow-sm">
+          <div className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-2xl p-10 mb-12 animate-slide-up shadow-lg hover:shadow-xl transition-shadow duration-300">
             <div className="text-center mb-10">
               <div className="w-40 h-40 bg-[#f0f4f0] dark:bg-[#2d3a2d] rounded-full mx-auto mb-8 flex items-center justify-center text-6xl animate-bounce-gentle">
                 🇩🇪
@@ -46,7 +57,7 @@ export default function AboutPage() {
 
           {/* Additional Info */}
           <div className="grid md:grid-cols-2 gap-8 animate-slide-up" style={{animationDelay: '0.2s'}}>
-            <div className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-xl p-8 hover:border-[#6b8e6b] dark:hover:border-[#7a9a7a] transition-all duration-300 shadow-sm">
+            <div className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-2xl p-8 hover:border-[#6b8e6b] dark:hover:border-[#7a9a7a] transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
               <h3 className="text-2xl font-serif font-bold text-[#2d3748] dark:text-[#e5e7eb] mb-6 flex items-center">
                 <span className="mr-4 text-3xl">📍</span>
                 Location
@@ -57,7 +68,7 @@ export default function AboutPage() {
               </p>
             </div>
             
-            <div className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-xl p-8 hover:border-[#6b8e6b] dark:hover:border-[#7a9a7a] transition-all duration-300 shadow-sm">
+            <div className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-2xl p-8 hover:border-[#6b8e6b] dark:hover:border-[#7a9a7a] transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
               <h3 className="text-2xl font-serif font-bold text-[#2d3748] dark:text-[#e5e7eb] mb-6 flex items-center">
                 <span className="mr-4 text-3xl">📚</span>
                 Studies
