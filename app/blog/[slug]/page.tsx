@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getPostBySlug, getPostContent, getAllPosts } from '../../lib/posts'
@@ -29,17 +30,19 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
   const description = post.excerpt || plainText.substring(0, 160) + (plainText.length > 160 ? '...' : '')
   
   // Generate OG image URL (you can customize this)
-  const ogImage = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com'}/api/og?title=${encodeURIComponent(post.title)}`
+  const ogImage =
+    post.coverImage ||
+    `${process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com'}/api/og?title=${encodeURIComponent(post.title)}`
 
   return {
-    title: `${post.title} | Tejas CK Studio`,
+    title: `${post.title} | Tejas C.K Studio`,
     description,
     openGraph: {
       title: post.title,
       description,
       type: 'article',
       publishedTime: post.date,
-      authors: ['Tejas CK'],
+      authors: ['Tejas C.K'],
       images: [
         {
           url: ogImage,
@@ -100,6 +103,18 @@ export default async function PostPage({ params }: PostPageProps) {
 
           <header className="mb-16 animate-slide-up">
             <div className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-2xl p-8 shadow-lg">
+              {post.coverImage && (
+                <div className="mb-6 overflow-hidden rounded-xl border border-[#e2e8f0] dark:border-[#4a5568]">
+                  <Image
+                    src={post.coverImage}
+                    alt={post.coverImageAlt || post.title}
+                    width={1600}
+                    height={900}
+                    className="w-full h-auto object-cover"
+                    priority
+                  />
+                </div>
+              )}
               <div className="mb-4">
                 <span className="inline-flex items-center gap-2 rounded-full border border-[#6b8e6b] dark:border-[#7a9a7a] bg-[#f0f4f0] dark:bg-[#2d3a2d] px-4 py-1.5 text-sm font-semibold text-[#6b8e6b] dark:text-[#7a9a7a]">
                   Letters from Schmalkalden

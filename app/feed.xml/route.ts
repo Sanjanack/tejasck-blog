@@ -16,7 +16,7 @@ export async function GET() {
       <guid isPermaLink="true">${postUrl}</guid>
       <description><![CDATA[${post.excerpt}]]></description>
       <pubDate>${pubDate}</pubDate>
-      <dc:creator><![CDATA[Tejas CK]]></dc:creator>
+      <dc:creator><![CDATA[Tejas C.K]]></dc:creator>
     </item>`
   }).join('')
 
@@ -45,4 +45,7 @@ export async function GET() {
     },
   })
 }
+
+
+
 

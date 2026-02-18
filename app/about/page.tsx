@@ -35,7 +35,7 @@ export default function AboutPage() {
             
             <div className="prose prose-lg max-w-none">
               <p className="text-xl text-[#4a5568] dark:text-[#9ca3af] leading-relaxed mb-8">
-                Hey there! I'm a student from India currently studying in Schmalkalden, Germany. 
+                Hey there! I&apos;m a student from India currently studying in Schmalkalden, Germany. 
                 This blog is my way of capturing memories, sharing stories, and reflecting on 
                 everything I learn along the way.
               </p>
@@ -48,7 +48,7 @@ export default function AboutPage() {
               </p>
               
               <p className="text-xl text-[#4a5568] dark:text-[#9ca3af] leading-relaxed">
-                Whether it's the taste of authentic German bread, the beauty of European architecture, 
+                Whether it&apos;s the taste of authentic German bread, the beauty of European architecture, 
                 or the warmth of new friendships, each day brings something special worth remembering. 
                 Join me as I document this adventure, one story at a time.
               </p>

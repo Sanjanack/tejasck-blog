@@ -16,6 +16,8 @@ export interface Post {
   readingTime: number
   tags?: string[]
   series?: string
+  coverImage?: string
+  coverImageAlt?: string
 }
 
 // Internal function without cache for use in cached functions
@@ -42,6 +44,8 @@ function _getAllPosts(): Post[] {
           readingTime,
           tags: Array.isArray(data.tags) ? data.tags : (data.tags ? [data.tags] : []),
           series: data.series || 'Letters from Schmalkalden',
+          coverImage: data.coverImage ? String(data.coverImage) : undefined,
+          coverImageAlt: data.coverImageAlt ? String(data.coverImageAlt) : undefined,
         }
       })
     
@@ -74,6 +78,8 @@ function _getPostBySlug(slug: string): Post | null {
       readingTime,
       tags: Array.isArray(data.tags) ? data.tags : (data.tags ? [data.tags] : []),
       series: data.series || 'Letters from Schmalkalden',
+      coverImage: data.coverImage ? String(data.coverImage) : undefined,
+      coverImageAlt: data.coverImageAlt ? String(data.coverImageAlt) : undefined,
     }
   } catch (error) {
     console.error('Error reading post:', error)

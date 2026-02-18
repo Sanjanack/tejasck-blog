@@ -45,10 +45,6 @@ export default function AnimatedGlobe() {
         </div>
       </div>
       
-      {/* Label */}
-      <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs text-[#718096] dark:text-[#9ca3af] whitespace-nowrap">
-        Readers from India & Germany
-      </div>
     </div>
   )
 }

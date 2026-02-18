@@ -13,6 +13,10 @@ export default async function AdminCommentsPage() {
   }
 
   const comments = await prisma.comment.findMany({
+    include: {
+      parent: true,
+      replies: true,
+    },
     orderBy: { createdAt: 'desc' }
   })
 
@@ -39,7 +43,10 @@ export default async function AdminCommentsPage() {
                     {comment.email && `${comment.email} • `}
                     {new Date(comment.createdAt).toLocaleString()}
                   </p>
-                  <p className="text-sm text-[#a0aec0] dark:text-[#6b7280]">Post: {comment.postSlug}</p>
+                  <p className="text-sm text-[#a0aec0] dark:text-[#6b7280]">
+                    Post: {comment.postSlug}
+                    {comment.parentId && ` · Reply to: ${comment.parent?.name || 'comment'}`}
+                  </p>
                 </div>
                 <div className={`px-3 py-1 rounded-lg text-xs font-medium ${
                   comment.approved 

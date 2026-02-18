@@ -65,7 +65,7 @@ export default function Navbar() {
             </div>
             <div className="flex flex-col leading-tight">
               <span className="text-base font-semibold tracking-wide text-[#2d3748] dark:text-[#e5e7eb] group-hover:text-[#6b8e6b] dark:group-hover:text-[#7a9a7a] transition-colors duration-300">
-                Tejas CK Studio
+                Tejas C.K Studio
               </span>
               <span className="text-xs uppercase tracking-[0.3em] text-[#718096] dark:text-[#9ca3af]">
                 Letters Network
@@ -79,8 +79,9 @@ export default function Navbar() {
               { href: '/', label: 'Home' },
               { href: '/#series', label: 'Series' },
               { href: '/blog', label: 'Letters' },
-              { href: '/about', label: 'About' },
+              { href: '/gallery', label: 'Gallery' },
               { href: '/ask', label: 'Ask' },
+              { href: '/about', label: 'About' },
             ].map((item) => (
               <Link
                 key={item.href}
@@ -133,8 +134,9 @@ export default function Navbar() {
                 { href: '/', label: 'Home' },
                 { href: '/#series', label: 'Series' },
                 { href: '/blog', label: 'Letters' },
-                { href: '/about', label: 'About' },
+                { href: '/gallery', label: 'Gallery' },
                 { href: '/ask', label: 'Ask' },
+                { href: '/about', label: 'About' },
               ].map((item) => (
                 <Link
                   key={item.href}

@@ -13,23 +13,25 @@ export default function PostLikeButton({ postSlug }: PostLikeButtonProps) {
   const [toggling, setToggling] = useState(false)
 
   useEffect(() => {
-    fetchLikeStatus()
-  }, [postSlug])
-
-  const fetchLikeStatus = async () => {
-    try {
-      const response = await fetch(`/api/posts/${postSlug}/like`)
-      const data = await response.json()
-      if (data.ok) {
-        setLiked(data.liked)
-        setCount(data.count)
+    let cancelled = false
+    ;(async () => {
+      try {
+        const response = await fetch(`/api/posts/${postSlug}/like`)
+        const data = await response.json()
+        if (!cancelled && data.ok) {
+          setLiked(data.liked)
+          setCount(data.count)
+        }
+      } catch (error) {
+        console.error('Error fetching like status:', error)
+      } finally {
+        if (!cancelled) setLoading(false)
       }
-    } catch (error) {
-      console.error('Error fetching like status:', error)
-    } finally {
-      setLoading(false)
+    })()
+    return () => {
+      cancelled = true
     }
-  }
+  }, [postSlug])
 
   const handleToggleLike = async () => {
     if (toggling) return

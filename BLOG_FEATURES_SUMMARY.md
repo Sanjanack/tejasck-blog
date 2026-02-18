@@ -92,7 +92,7 @@ const readingTime = Math.ceil(wordCount / 200) // 200 words per minute
 - **Tags**: title, description, og:title, og:description, og:image, twitter cards
 
 ### Features
-- **Title**: `{post.title} | Tejas CK Studio`
+- **Title**: `{post.title} | Tejas C.K Studio`
 - **Description**: First 160 characters of content (or excerpt)
 - **OG Image**: Dynamic URL (can be customized)
 - **Published Time**: Uses post date
@@ -101,7 +101,7 @@ const readingTime = Math.ceil(wordCount / 200) // 200 words per minute
 ### Meta Tags Generated
 ```typescript
 {
-  title: `${post.title} | Tejas CK Studio`,
+  title: `${post.title} | Tejas C.K Studio`,
   description: post.excerpt || first160chars,
   openGraph: {
     title: post.title,

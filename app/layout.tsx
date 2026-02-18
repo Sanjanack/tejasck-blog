@@ -11,22 +11,22 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com'
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: 'Tejas CK Studio · Letters & Vlogs',
-  description: 'A publishing hub for Tejas CK—featuring Letters from Schmalkalden plus future travel and study vlog series.',
-  keywords: ['Tejas CK', 'blog network', 'Germany vlog', 'Letters from Schmalkalden', 'study abroad'],
-  authors: [{ name: 'Tejas CK Studio' }],
+  title: 'Tejas C.K Studio · Letters & Vlogs',
+  description: 'A publishing hub for Tejas C.K—featuring Letters from Schmalkalden plus future travel and study vlog series.',
+  keywords: ['Tejas C.K', 'blog network', 'Germany vlog', 'Letters from Schmalkalden', 'study abroad'],
+  authors: [{ name: 'Tejas C.K Studio' }],
   openGraph: {
-    title: 'Tejas CK Studio · Letters & Vlogs',
-    description: "Letters from Schmalkalden is the first series in Tejas CK's growing blog network.",
+    title: 'Tejas C.K Studio · Letters & Vlogs',
+    description: "Letters from Schmalkalden is the first series in Tejas C.K's growing blog network.",
     type: 'website',
     locale: 'en_US',
     url: siteUrl,
-    siteName: 'Tejas CK Studio',
+    siteName: 'Tejas C.K Studio',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Tejas CK Studio · Letters & Vlogs',
-    description: "Letters from Schmalkalden is the first series in Tejas CK's growing blog network.",
+    title: 'Tejas C.K Studio · Letters & Vlogs',
+    description: "Letters from Schmalkalden is the first series in Tejas C.K's growing blog network.",
   },
   robots: 'index, follow',
   alternates: {

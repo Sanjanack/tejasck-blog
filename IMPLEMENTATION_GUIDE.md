@@ -42,23 +42,9 @@ model PostLike {
 
 ## ✅ 2. Tags System
 
-### Prisma Schema
-```prisma
-model Tag {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  postSlug  String   // Reference to markdown post
-  createdAt DateTime @default(now())
-
-  @@index([postSlug])
-  @@index([name])
-}
-```
-
 ### How It Works
 - **Tags stored in markdown frontmatter**: Add `tags: ["tag1", "tag2"]` to post frontmatter
-- **Database sync**: Tags are stored in Prisma for filtering
-- **Filtering**: Click tags to filter posts by tag
+- **Filtering**: Click tags to filter posts by tag (derived from Markdown; no DB required)
 
 ### Adding Tags to Posts
 Edit your markdown file:
@@ -77,10 +63,6 @@ Your content...
 - **PostTags**: Displays tags on posts (clickable)
 - **Tag Filter**: Filter bar on blog listing page
 - **Tag Links**: Clicking a tag filters posts
-
-### API Route
-- **GET `/api/tags`** - Get all tags with post counts
-- **POST `/api/tags`** - Create tag (for admin use)
 
 ### Usage
 1. Add tags to markdown frontmatter
@@ -239,8 +221,6 @@ You can create a script to sync tags from markdown to database, or tags will be 
 |----------|--------|------|-------------|
 | `/api/posts/[slug]/like` | GET | No | Get like status & count |
 | `/api/posts/[slug]/like` | POST | No | Toggle like/unlike |
-| `/api/tags` | GET | No | Get all tags with counts |
-| `/api/tags` | POST | No | Create tag |
 | `/api/upload` | POST | Yes | Upload image to Cloudinary |
 | `/admin` | GET | Yes | Admin dashboard |
 | `/admin/posts` | GET | Yes | Post management |
@@ -257,7 +237,6 @@ You can create a script to sync tags from markdown to database, or tags will be 
 
 ### Tags
 - Tags stored in markdown frontmatter (source of truth)
-- Database used for filtering and counting
 - Tags are case-sensitive
 
 ### Image Upload

@@ -1,10 +1,10 @@
-# Tejas CK Studio · Letters Network
+# Tejas C.K Studio · Letters Network
 
-A multi-series publishing hub for Tejas CK. The first live series is **Letters from Schmalkalden**, a vlog-style study-abroad diary, and the platform is structured so more blogs (Rail Diaries, Bytes, etc.) can plug in with the same codebase.
+A multi-series publishing hub for Tejas C.K. The first live series is **Letters from Schmalkalden**, a vlog-style study-abroad diary, and the platform is structured so more blogs (Rail Diaries, Bytes, etc.) can plug in with the same codebase.
 
 ## Features
 
-- ✨ Multi-series landing page (Tejas CK Studio + Letters spotlight)
+- ✨ Multi-series landing page (Tejas C.K Studio + Letters spotlight)
 - 📝 Markdown-based blog posts per series
 - 🎨 Light/dark theming with quick palette swaps
 - 📱 Fully responsive mobile-first design
@@ -26,7 +26,7 @@ A multi-series publishing hub for Tejas CK. The first live series is **Letters f
 | Layer | What it does | Key files |
 | --- | --- | --- |
 | UI shell | `app/layout.tsx` wires the navbar, footer, fonts, and theme provider. | `app/layout.tsx`, `app/components/Navbar.tsx` |
-| Landing experience | `app/page.tsx` renders the Tejas CK Studio hero, the series grid, and callouts. | `app/page.tsx` |
+| Landing experience | `app/page.tsx` renders the Tejas C.K Studio hero, the series grid, and callouts. | `app/page.tsx` |
 | Blog engine | Markdown files in `posts/` are read via `app/lib/posts.ts`, converted to HTML with `remark`, and displayed in `app/blog`. | `posts/`, `app/blog/*` |
 | Ask facility | Client form at `app/ask/page.tsx` posts to `app/api/ask/route.ts`; Prisma stores data and Resend forwards emails. | `app/ask/page.tsx`, `app/api/ask/route.ts`, `prisma/schema.prisma` |
 | Theming | `ThemeProvider` toggles `data-theme` + `dark` class; Tailwind tokens + CSS variables shift colors instantly. | `app/components/ThemeProvider.tsx`, `app/globals.css`, `tailwind.config.js` |
@@ -79,6 +79,8 @@ Your content here...
 ```
 
 3. The post will automatically appear on the blog page!
+
+For a complete walkthrough (editing, images, cover images, readability), see `BLOG_EDITING_GUIDE.md`.
 
 ## 🚀 Quick Deployment
 
@@ -224,7 +226,7 @@ The `/ask` page is wired to a fully server-side workflow so viewer questions rea
    ```bash
    git init
    git add .
-   git commit -m "Initial Tejas CK Studio setup"
+   git commit -m "Initial Tejas C.K Studio setup"
    ```
 2. **Create a GitHub repo:** visit github.com → New Repository → follow the instructions. Usually:
    ```bash

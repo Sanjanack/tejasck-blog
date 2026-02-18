@@ -62,11 +62,11 @@ export default function AskPage() {
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-[#2d3748] dark:text-[#e5e7eb] mb-4">
             <span className="bg-gradient-to-r from-[#2d3748] to-[#6b8e6b] dark:from-[#e5e7eb] dark:to-[#7a9a7a] bg-clip-text text-transparent">
-              Ask & I'll Reply
+              Ask & I&apos;ll Reply
             </span>
           </h1>
           <p className="text-base sm:text-lg text-[#4a5568] dark:text-[#9ca3af] max-w-2xl mx-auto">
-            Drop a question or story idea. I'll reply by email or feature it in a vlog.
+            Drop a question or story idea. I&apos;ll reply by email or feature it in a vlog.
           </p>
         </div>
 

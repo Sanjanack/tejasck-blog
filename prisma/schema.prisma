@@ -24,8 +24,29 @@ model Comment {
   email     String?
   message   String
   approved  Boolean  @default(false)
+  parentId  String?  // For replies
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
+  parent    Comment? @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[] @relation("CommentReplies")
+  reactions CommentReaction[]
+  
+  @@index([postSlug])
+  @@index([parentId])
+}
+
+model CommentReaction {
+  id        String   @id @default(cuid())
+  commentId String
+  userId    String   // User identifier (IP or session)
+  type      String   // 'like', 'love', 'laugh', 'wow', 'sad', 'angry'
+  createdAt DateTime @default(now())
+  
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  
+  @@unique([commentId, userId])
+  @@index([commentId])
 }
 
 model PostLike {
@@ -36,14 +57,4 @@ model PostLike {
 
   @@unique([userId, postSlug])
   @@index([postSlug])
-}
-
-model Tag {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  postSlug  String // Reference to markdown post slug
-  createdAt DateTime @default(now())
-
-  @@index([postSlug])
-  @@index([name])
 }

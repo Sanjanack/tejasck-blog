@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { prisma } from '@/app/lib/prisma'
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -60,7 +60,7 @@ export async function POST(request: Request) {
     ].filter(Boolean) as string[]
 
     if (toRecipients.length > 0 && process.env.RESEND_API_KEY) {
-      await resend.emails.send({
+      await resend?.emails.send({
         from: 'Ask Bot <noreply@yourdomain.dev>',
         to: toRecipients,
         subject: `New Ask submission: ${subject}`,

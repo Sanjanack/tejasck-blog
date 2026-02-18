@@ -48,6 +48,12 @@ export default async function AdminPostsPage() {
           </Link>
         </div>
 
+        {process.env.VERCEL && (
+          <div className="mb-8 rounded-xl border border-[#f59e0b] dark:border-[#fbbf24] bg-[#fffbeb] dark:bg-[#2e1f0a] px-6 py-4 text-sm text-[#92400e] dark:text-[#fbbf24]">
+            Post editing is disabled on Vercel (filesystem is not persistent). Edit Markdown files in <code className="px-1 py-0.5 rounded bg-black/5 dark:bg-white/10">posts/</code> in your repo, then redeploy.
+          </div>
+        )}
+
         {/* Posts Table */}
         <div className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-xl shadow-sm overflow-hidden">
           <div className="overflow-x-auto">

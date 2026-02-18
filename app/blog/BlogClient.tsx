@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useEffect, useState, useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
 import SearchBar from '../components/SearchBar'
@@ -15,6 +16,8 @@ export interface PostClient {
   readingTime?: number
   tags?: string[]
   series?: string
+  coverImage?: string
+  coverImageAlt?: string
 }
 
 function BlogClientContent({ posts }: { posts: PostClient[] }) {
@@ -221,6 +224,17 @@ function BlogClientContent({ posts }: { posts: PostClient[] }) {
                     >
                       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
                         <div className="flex-1">
+                          {post.coverImage && (
+                            <div className="mb-5 overflow-hidden rounded-xl border border-[#e2e8f0] dark:border-[#4a5568]">
+                              <Image
+                                src={post.coverImage}
+                                alt={post.coverImageAlt || post.title}
+                                width={1200}
+                                height={675}
+                                className="w-full h-auto object-cover"
+                              />
+                            </div>
+                          )}
                           <div className="flex items-center gap-3 mb-4">
                             <div className="w-2 h-2 bg-[#6b8e6b] dark:bg-[#7a9a7a] rounded-full"></div>
                             <time 
@@ -302,6 +316,17 @@ function BlogClientContent({ posts }: { posts: PostClient[] }) {
               >
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
                   <div className="flex-1">
+                    {post.coverImage && (
+                      <div className="mb-5 overflow-hidden rounded-xl border border-[#e2e8f0] dark:border-[#4a5568]">
+                        <Image
+                          src={post.coverImage}
+                          alt={post.coverImageAlt || post.title}
+                          width={1200}
+                          height={675}
+                          className="w-full h-auto object-cover"
+                        />
+                      </div>
+                    )}
                     <div className="flex items-center gap-3 mb-4">
                       <div className="w-2 h-2 bg-[#6b8e6b] dark:bg-[#7a9a7a] rounded-full"></div>
                       <time 

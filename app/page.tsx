@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { getAllPosts } from './lib/posts'
 import FloatingCard from './components/FloatingCard'
 import AnimatedGlobe from './components/AnimatedGlobe'
-import InteractiveCounter from './components/InteractiveCounter'
 
 const futureSeries = [
   {
@@ -14,7 +13,7 @@ const futureSeries = [
     icon: '✉️',
   },
   {
-    title: 'Tejas C K Bytes',
+    title: 'Tejas C.K Bytes',
     status: 'Coming Soon',
     description: 'Tech lessons distilled',
     accent: '#6b8e6b',
@@ -40,7 +39,7 @@ export default function Home() {
         {/* Hero Section */}
         <header className="text-center space-y-8 mb-24">
           <div className="inline-flex items-center gap-2 rounded-full border border-[#cbd5e0] bg-white/80 backdrop-blur-sm px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#5b7c99] dark:border-[#4a5568] dark:bg-[#252525]/80 dark:text-[#9ca3af] animate-fade-in">
-            Tejas C K Studio
+            Tejas C.K Studio
           </div>
           
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-serif font-bold text-[#2d3748] dark:text-[#e5e7eb] leading-tight animate-slide-up">
@@ -70,27 +69,6 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Stats */}
-          <div className="flex flex-wrap justify-center gap-8 mt-12 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-            <div className="text-center">
-              <div className="text-3xl sm:text-4xl font-bold text-[#6b8e6b] dark:text-[#7a9a7a]">
-                <InteractiveCounter end={totalPosts} />
-              </div>
-              <div className="text-sm text-[#718096] dark:text-[#9ca3af] mt-1">Letters</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl sm:text-4xl font-bold text-[#6b8e6b] dark:text-[#7a9a7a]">
-                <InteractiveCounter end={2} />
-              </div>
-              <div className="text-sm text-[#718096] dark:text-[#9ca3af] mt-1">Countries</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl sm:text-4xl font-bold text-[#6b8e6b] dark:text-[#7a9a7a]">
-                <InteractiveCounter end={50} suffix="+" />
-              </div>
-              <div className="text-sm text-[#718096] dark:text-[#9ca3af] mt-1">Readers</div>
-            </div>
-          </div>
         </header>
 
         {/* Interactive Globe */}
@@ -115,7 +93,7 @@ export default function Home() {
                       ? 'bg-[#f0f4f0] text-[#5a7a5a] dark:bg-[#2d3a2d] dark:text-[#7a9a7a]'
                       : 'bg-[#f7fafc] text-[#718096] dark:bg-[#1f1f1f] dark:text-[#9ca3af]'
                   }`}>
-                    {series.status}
+                    {series.status === 'Coming Soon' ? 'Explore Diary' : series.status}
                   </span>
                 </div>
                 <h3 className="text-2xl font-bold text-[#2d3748] dark:text-[#e5e7eb] mb-2">
@@ -139,9 +117,7 @@ export default function Home() {
 
         {/* Quick Links */}
         <div className="text-center space-y-4 animate-fade-in" style={{ animationDelay: '0.5s' }}>
-          <p className="text-sm text-[#718096] dark:text-[#9ca3af]">
-            New letters every Sunday
-          </p>
+          {/* No fixed schedule line to keep posting flexible */}
           <Link 
             href="/about" 
             className="inline-block text-sm text-[#6b8e6b] dark:text-[#7a9a7a] hover:underline"

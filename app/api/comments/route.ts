@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/app/lib/prisma'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -10,11 +10,12 @@ function isValidEmail(email: string) {
 
 function validateComment(body: any) {
   const errors: Record<string, string[]> = {}
-  const result: { postSlug: string; name: string; email?: string; message: string } = {
+  const result: { postSlug: string; name: string; email?: string; message: string; parentId?: string } = {
     postSlug: String(body?.postSlug || '').trim(),
     name: String(body?.name || '').trim(),
     email: String(body?.email || '').trim(),
     message: String(body?.message || '').trim(),
+    parentId: body?.parentId ? String(body.parentId).trim() : undefined,
   }
 
   if (!result.postSlug || result.postSlug.length > 100) {
@@ -45,12 +46,39 @@ export async function GET(request: Request) {
     const comments = await prisma.comment.findMany({
       where: { 
         postSlug,
-        approved: true 
+        approved: true,
+        parentId: null // Only top-level comments
+      },
+      include: {
+        replies: {
+          where: { approved: true },
+          orderBy: { createdAt: 'asc' },
+          include: {
+            reactions: true,
+          },
+        },
+        reactions: true,
       },
       orderBy: { createdAt: 'desc' }
     })
 
-    return NextResponse.json({ ok: true, comments })
+    // Transform reactions to counts per type
+    const transformComments = (comments: any[]): any[] => {
+      return comments.map((comment) => {
+        const reactionCounts: Record<string, number> = {}
+        comment.reactions?.forEach((r: any) => {
+          reactionCounts[r.type] = (reactionCounts[r.type] || 0) + 1
+        })
+        
+        return {
+          ...comment,
+          reactions: reactionCounts,
+          replies: comment.replies ? transformComments(comment.replies) : [],
+        }
+      })
+    }
+
+    return NextResponse.json({ ok: true, comments: transformComments(comments) })
   } catch (error) {
     console.error('Error fetching comments', error)
     return NextResponse.json({ ok: false, error: 'Failed to fetch comments' }, { status: 500 })
@@ -65,7 +93,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: false, errors: parsed.errors }, { status: 400 })
     }
 
-    const { postSlug, name, email, message } = parsed.data
+    const { postSlug, name, email, message, parentId } = parsed.data
 
     const comment = await prisma.comment.create({
       data: {
@@ -73,6 +101,7 @@ export async function POST(request: Request) {
         name,
         email: email || null,
         message,
+        parentId: parentId || null,
         approved: false, // Comments need approval
       }
     })
@@ -83,7 +112,7 @@ export async function POST(request: Request) {
       const postUrl = `${siteUrl}/blog/${postSlug}`
       
       try {
-        await resend.emails.send({
+        await resend?.emails.send({
           from: 'Comments Bot <noreply@yourdomain.dev>',
           to: [process.env.ASK_RECIPIENT_1],
           subject: `New comment on: ${postSlug}`,

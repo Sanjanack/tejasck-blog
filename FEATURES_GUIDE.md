@@ -1,4 +1,4 @@
-# Complete Features Guide - Tejas CK Studio
+# Complete Features Guide - Tejas C.K Studio
 
 This guide explains every feature of your blog platform and how to use them effectively.
 
@@ -131,23 +131,23 @@ npx prisma studio
 
 ### What Is This?
 
-The platform is designed so **Tejas CK Studio** can host multiple blog series under one website. Currently, "Letters from Schmalkalden" is the live series, but you can add more.
+The platform is designed so **Tejas C.K Studio** can host multiple blog series under one website. Currently, "Letters from Schmalkalden" is the live series, but you can add more.
 
 ### How It Works
 
 **Current Structure:**
 ```
-Tejas CK Studio (Main Hub)
+Tejas C.K Studio (Main Hub)
   └── Letters from Schmalkalden (Live Series)
       └── Blog posts, comments, Ask form
 ```
 
 **Future Structure (Example):**
 ```
-Tejas CK Studio (Main Hub)
+Tejas C.K Studio (Main Hub)
   ├── Letters from Schmalkalden (Live)
   ├── Rail Diaries (Coming Soon)
-  └── Tejas CK Bytes (Idea)
+  └── Tejas C.K Bytes (Idea)
 ```
 
 ### What "Shared CMS" Means
@@ -250,7 +250,7 @@ npx prisma migrate deploy
 ## 🎯 **Navigation Structure**
 
 ### Main Pages
-- **`/`**: Home page (Tejas CK Studio hub)
+- **`/`**: Home page (Tejas C.K Studio hub)
 - **`/blog`**: Letters from Schmalkalden blog listing
 - **`/blog/[slug]`**: Individual blog post
 - **`/about`**: About page
