@@ -13,25 +13,24 @@ export default async function AdminDashboard() {
   }
 
   // Get stats
-  const [posts, comments, likes, askSubmissions] = await Promise.all([
+  const [posts, comments, likes, reactions, askSubmissions] = await Promise.all([
     getAllPosts(),
     prisma.comment.findMany(),
     prisma.postLike.findMany(),
+    prisma.postReaction.findMany(),
     prisma.askSubmission.findMany(),
   ])
 
   const stats = {
     totalPosts: posts.length,
     totalComments: comments.length,
-    approvedComments: comments.filter((c) => c.approved).length,
-    pendingComments: comments.filter((c) => !c.approved).length,
     totalLikes: likes.length,
+    totalReactions: reactions.length,
     totalAskSubmissions: askSubmissions.length,
   }
 
   return (
-    <div className="pt-16 min-h-screen bg-[#faf9f7] dark:bg-[#1a1a1a]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
           <h1 className="text-4xl font-serif font-bold text-[#2d3748] dark:text-[#e5e7eb] mb-4">
             Admin Dashboard
@@ -60,16 +59,8 @@ export default async function AdminDashboard() {
               <div>
                 <p className="text-sm text-[#718096] dark:text-[#9ca3af] mb-1">Comments</p>
                 <p className="text-3xl font-bold text-[#2d3748] dark:text-[#e5e7eb]">
-                  {stats.approvedComments}
-                  <span className="text-lg text-[#718096] dark:text-[#9ca3af] ml-2">
-                    / {stats.totalComments}
-                  </span>
+                  {stats.totalComments}
                 </p>
-                {stats.pendingComments > 0 && (
-                  <p className="text-xs text-[#f59e0b] dark:text-[#fbbf24] mt-1">
-                    {stats.pendingComments} pending
-                  </p>
-                )}
               </div>
               <div className="w-12 h-12 bg-[#f0f4f7] dark:bg-[#2d3a3f] rounded-lg flex items-center justify-center">
                 <span className="text-2xl">💬</span>
@@ -80,8 +71,9 @@ export default async function AdminDashboard() {
           <div className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-xl p-6 shadow-sm">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-[#718096] dark:text-[#9ca3af] mb-1">Total Likes</p>
-                <p className="text-3xl font-bold text-[#2d3748] dark:text-[#e5e7eb]">{stats.totalLikes}</p>
+                <p className="text-sm text-[#718096] dark:text-[#9ca3af] mb-1">Post Reactions</p>
+                <p className="text-3xl font-bold text-[#2d3748] dark:text-[#e5e7eb]">{stats.totalReactions}</p>
+                <p className="text-xs text-[#718096] dark:text-[#9ca3af] mt-1">+ {stats.totalLikes} likes</p>
               </div>
               <div className="w-12 h-12 bg-[#fef2f2] dark:bg-[#2e1a1a] rounded-lg flex items-center justify-center">
                 <span className="text-2xl">❤️</span>
@@ -133,22 +125,17 @@ export default async function AdminDashboard() {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-[#2d3748] dark:text-[#e5e7eb] mb-1">
-                  Moderate Comments
+                  Manage Comments
                 </h3>
                 <p className="text-sm text-[#718096] dark:text-[#9ca3af]">
-                  Approve or delete comments
-                  {stats.pendingComments > 0 && (
-                    <span className="ml-2 text-[#f59e0b] dark:text-[#fbbf24] font-medium">
-                      ({stats.pendingComments} pending)
-                    </span>
-                  )}
+                  View and delete comments
                 </p>
               </div>
             </div>
           </Link>
 
           <Link
-            href="/ask"
+            href="/admin/ask"
             className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-xl p-6 shadow-sm hover:border-[#6b8e6b] dark:hover:border-[#7a9a7a] transition-all duration-200"
           >
             <div className="flex items-center gap-4">
@@ -166,7 +153,6 @@ export default async function AdminDashboard() {
             </div>
           </Link>
         </div>
-      </div>
     </div>
   )
 }

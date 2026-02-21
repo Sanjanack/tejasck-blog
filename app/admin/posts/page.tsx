@@ -29,7 +29,7 @@ export default async function AdminPostsPage() {
   })
 
   return (
-    <div className="pt-16 min-h-screen bg-[#faf9f7] dark:bg-[#1a1a1a]">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8 flex items-center justify-between">
           <div>
@@ -37,7 +37,7 @@ export default async function AdminPostsPage() {
               Manage Posts
             </h1>
             <Link href="/admin" className="text-[#6b8e6b] dark:text-[#7a9a7a] hover:text-[#5a7a5a] dark:hover:text-[#6b8e6b]">
-              ← Back to Dashboard
+              ← Dashboard
             </Link>
           </div>
           <Link

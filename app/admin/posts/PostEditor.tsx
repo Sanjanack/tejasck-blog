@@ -161,7 +161,7 @@ export default function PostEditor({ mode, initial }: { mode: EditorMode; initia
       if (mode === 'new') {
         const createdSlug = typeof data.slug === 'string' ? data.slug : slugToUse
         setSlug(createdSlug)
-        router.push(`/admin/posts/${createdSlug}/edit`)
+        router.push(`/cms-x8k2/posts/${createdSlug}/edit`)
       } else {
         router.refresh()
       }
@@ -181,7 +181,7 @@ export default function PostEditor({ mode, initial }: { mode: EditorMode; initia
       const res = await fetch(`/api/admin/posts/${slug}`, { method: 'DELETE' })
       const data = await res.json()
       if (!res.ok || !data.ok) throw new Error(data.error || 'Delete failed')
-      router.push('/admin/posts')
+      router.push('/cms-x8k2/posts')
       router.refresh()
     } catch (e: any) {
       setError(e?.message || 'Delete failed.')

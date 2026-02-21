@@ -1,19 +1,11 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/app/lib/prisma'
-import { Resend } from 'resend'
-
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
-
-function isValidEmail(email: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-}
 
 function validateComment(body: any) {
   const errors: Record<string, string[]> = {}
-  const result: { postSlug: string; name: string; email?: string; message: string; parentId?: string } = {
+  const result: { postSlug: string; name: string; message: string; parentId?: string } = {
     postSlug: String(body?.postSlug || '').trim(),
     name: String(body?.name || '').trim(),
-    email: String(body?.email || '').trim(),
     message: String(body?.message || '').trim(),
     parentId: body?.parentId ? String(body.parentId).trim() : undefined,
   }
@@ -23,9 +15,6 @@ function validateComment(body: any) {
   }
   if (!result.name || result.name.length > 100) {
     errors.name = ['Name is required and must be <= 100 chars']
-  }
-  if (result.email && !isValidEmail(result.email)) {
-    errors.email = ['Invalid email']
   }
   if (!result.message || result.message.length < 5 || result.message.length > 1000) {
     errors.message = ['Message must be between 5 and 1000 chars']
@@ -46,12 +35,10 @@ export async function GET(request: Request) {
     const comments = await prisma.comment.findMany({
       where: { 
         postSlug,
-        approved: true,
         parentId: null // Only top-level comments
       },
       include: {
         replies: {
-          where: { approved: true },
           orderBy: { createdAt: 'asc' },
           include: {
             reactions: true,
@@ -93,45 +80,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: false, errors: parsed.errors }, { status: 400 })
     }
 
-    const { postSlug, name, email, message, parentId } = parsed.data
+    const { postSlug, name, message, parentId } = parsed.data
 
     const comment = await prisma.comment.create({
       data: {
         postSlug,
         name,
-        email: email || null,
         message,
         parentId: parentId || null,
-        approved: false, // Comments need approval
       }
     })
-
-    // Send email notification to admin
-    if (process.env.RESEND_API_KEY && process.env.ASK_RECIPIENT_1) {
-      const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com'
-      const postUrl = `${siteUrl}/blog/${postSlug}`
-      
-      try {
-        await resend?.emails.send({
-          from: 'Comments Bot <noreply@yourdomain.dev>',
-          to: [process.env.ASK_RECIPIENT_1],
-          subject: `New comment on: ${postSlug}`,
-          html: `
-            <h2>New Comment Awaiting Approval</h2>
-            <p><strong>Post:</strong> <a href="${postUrl}">${postSlug}</a></p>
-            <p><strong>Name:</strong> ${name}</p>
-            ${email ? `<p><strong>Email:</strong> ${email}</p>` : ''}
-            <p><strong>Message:</strong></p>
-            <p>${message.replace(/\n/g, '<br>')}</p>
-            <hr>
-            <p><a href="${siteUrl}/admin/comments">Approve or delete this comment</a></p>
-          `,
-        })
-      } catch (emailError) {
-        console.error('Failed to send comment notification email:', emailError)
-        // Don't fail the request if email fails
-      }
-    }
 
     return NextResponse.json({ ok: true, comment })
   } catch (error) {

@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react'
 interface Comment {
   id: string
   name: string
-  email?: string
   message: string
   createdAt: string
   parentId?: string | null
@@ -34,8 +33,7 @@ export default function Comments({ postSlug }: CommentsProps) {
   const [replyingTo, setReplyingTo] = useState<string | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
+    name: typeof window !== 'undefined' ? localStorage.getItem('commenter_name') || '' : '',
     message: '',
     parentId: '',
   })
@@ -122,7 +120,6 @@ export default function Comments({ postSlug }: CommentsProps) {
         body: JSON.stringify({
           postSlug,
           name: formData.name,
-          email: formData.email,
           message: formData.message,
           parentId: formData.parentId || undefined,
         }),
@@ -130,10 +127,13 @@ export default function Comments({ postSlug }: CommentsProps) {
 
       const data = await response.json()
       if (data.ok) {
+        // Save name to localStorage for future use
+        if (typeof window !== 'undefined' && formData.name) {
+          localStorage.setItem('commenter_name', formData.name)
+        }
         setStatus('success')
-        setFormData({ name: '', email: '', message: '', parentId: '' })
+        setFormData({ name: '', message: '', parentId: '' })
         setShowForm(false)
-        setReplyingTo(null)
         // Refetch comments
         const refreshResponse = await fetch(`/api/comments?postSlug=${encodeURIComponent(postSlug)}`)
         const refreshData = await refreshResponse.json()
@@ -165,6 +165,8 @@ export default function Comments({ postSlug }: CommentsProps) {
   const CommentItem = ({ comment, isReply = false }: { comment: Comment; isReply?: boolean }) => {
     const [showReactionPicker, setShowReactionPicker] = useState(false)
     const [showReplyForm, setShowReplyForm] = useState(false)
+    const [replyFormData, setReplyFormData] = useState({ name: '', message: '' })
+    const [replying, setReplying] = useState(false)
     const [reactions, setReactions] = useState<Record<string, number>>({})
     const [userReaction, setUserReaction] = useState<string | null>(null)
 
@@ -267,9 +269,10 @@ export default function Comments({ postSlug }: CommentsProps) {
 
             <button
               onClick={() => {
-                setReplyingTo(comment.id)
-                setFormData({ ...formData, parentId: comment.id })
                 setShowReplyForm(true)
+                // Load saved name from localStorage if available
+                const savedName = typeof window !== 'undefined' ? localStorage.getItem('commenter_name') || '' : ''
+                setReplyFormData({ name: savedName, message: '' })
               }}
               className="flex items-center gap-1 px-2 py-1 rounded-lg text-sm text-[#718096] dark:text-[#9ca3af] hover:bg-[#f7fafc] dark:hover:bg-[#2d2d2d] transition-colors"
             >
@@ -281,11 +284,45 @@ export default function Comments({ postSlug }: CommentsProps) {
           </div>
 
           {/* Reply Form */}
-          {showReplyForm && replyingTo === comment.id && (
+          {showReplyForm && (
             <form
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault()
-                handleSubmit(e)
+                if (replying) return
+                setReplying(true)
+                try {
+                  const response = await fetch('/api/comments', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      postSlug,
+                      name: replyFormData.name,
+                      message: replyFormData.message,
+                      parentId: comment.id,
+                    }),
+                  })
+                  const data = await response.json()
+                  if (data.ok) {
+                    // Save name to localStorage
+                    if (typeof window !== 'undefined' && replyFormData.name) {
+                      localStorage.setItem('commenter_name', replyFormData.name)
+                    }
+                    setReplyFormData({ name: '', message: '' })
+                    setShowReplyForm(false)
+                    // Refetch comments to show the new reply
+                    const refreshResponse = await fetch(`/api/comments?postSlug=${encodeURIComponent(postSlug)}`)
+                    const refreshData = await refreshResponse.json()
+                    if (refreshData.ok) {
+                      setComments(refreshData.comments)
+                    }
+                  } else {
+                    alert(data.error || 'Failed to post reply')
+                  }
+                } catch (error) {
+                  alert('Something went wrong. Please try again.')
+                } finally {
+                  setReplying(false)
+                }
               }}
               className="mt-4 pt-4 border-t border-[#e2e8f0] dark:border-[#4a5568]"
             >
@@ -293,33 +330,32 @@ export default function Comments({ postSlug }: CommentsProps) {
                 <input
                   type="text"
                   required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  value={replyFormData.name}
+                  onChange={(e) => setReplyFormData({ ...replyFormData, name: e.target.value })}
                   className="flex-1 px-3 py-2 rounded-lg bg-white dark:bg-[#1f1f1f] border border-[#e2e8f0] dark:border-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb] text-sm focus:outline-none focus:ring-2 focus:ring-[#6b8e6b]"
                   placeholder="Your name"
                 />
                 <textarea
                   required
                   rows={2}
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  value={replyFormData.message}
+                  onChange={(e) => setReplyFormData({ ...replyFormData, message: e.target.value })}
                   className="flex-1 px-3 py-2 rounded-lg bg-white dark:bg-[#1f1f1f] border border-[#e2e8f0] dark:border-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb] text-sm focus:outline-none focus:ring-2 focus:ring-[#6b8e6b] resize-none"
                   placeholder="Write a reply..."
                 />
                 <div className="flex flex-col gap-1">
                   <button
                     type="submit"
-                    disabled={submitting}
+                    disabled={replying}
                     className="px-4 py-2 bg-[#6b8e6b] text-white rounded-lg text-sm font-medium hover:bg-[#5a7a5a] transition-colors disabled:opacity-50"
                   >
-                    {submitting ? '...' : 'Post'}
+                    {replying ? '...' : 'Post'}
                   </button>
                   <button
                     type="button"
                     onClick={() => {
                       setShowReplyForm(false)
-                      setReplyingTo(null)
-                      setFormData({ ...formData, parentId: '' })
+                      setReplyFormData({ name: '', message: '' })
                     }}
                     className="px-4 py-2 text-xs text-[#718096] dark:text-[#9ca3af] hover:text-[#2d3748] dark:hover:text-[#e5e7eb]"
                   >
@@ -381,34 +417,19 @@ export default function Comments({ postSlug }: CommentsProps) {
           <h4 className="text-lg font-semibold text-[#2d3748] dark:text-[#e5e7eb] mb-4">Leave a Comment</h4>
 
           <div className="grid gap-4">
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm text-[#4a5568] dark:text-[#9ca3af] mb-2" htmlFor="comment-name">
-                  Name *
-                </label>
-                <input
-                  id="comment-name"
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-white dark:bg-[#1f1f1f] border border-[#e2e8f0] dark:border-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb] focus:outline-none focus:ring-2 focus:ring-[#6b8e6b]"
-                  placeholder="Your name"
-                />
-              </div>
-              <div>
-                <label className="block text-sm text-[#4a5568] dark:text-[#9ca3af] mb-2" htmlFor="comment-email">
-                  Email (optional)
-                </label>
-                <input
-                  id="comment-email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-white dark:bg-[#1f1f1f] border border-[#e2e8f0] dark:border-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb] focus:outline-none focus:ring-2 focus:ring-[#6b8e6b]"
-                  placeholder="your@email.com"
-                />
-              </div>
+            <div>
+              <label className="block text-sm text-[#4a5568] dark:text-[#9ca3af] mb-2" htmlFor="comment-name">
+                Name *
+              </label>
+              <input
+                id="comment-name"
+                type="text"
+                required
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="w-full px-3 py-2 rounded-lg bg-white dark:bg-[#1f1f1f] border border-[#e2e8f0] dark:border-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb] focus:outline-none focus:ring-2 focus:ring-[#6b8e6b]"
+                placeholder="Your name"
+              />
             </div>
 
             <div>
@@ -427,15 +448,13 @@ export default function Comments({ postSlug }: CommentsProps) {
             </div>
 
             <div className="flex items-center justify-between">
-              <p className="text-xs text-[#718096] dark:text-[#9ca3af]">
-                Comments are moderated and will appear after approval.
-              </p>
+              <p className="text-xs text-[#718096] dark:text-[#9ca3af]">Replies appear instantly.</p>
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={() => {
                     setShowForm(false)
-                    setFormData({ name: '', email: '', message: '', parentId: '' })
+                    setFormData({ name: '', message: '', parentId: '' })
                   }}
                   className="px-4 py-2 text-[#718096] dark:text-[#9ca3af] hover:text-[#2d3748] dark:hover:text-[#e5e7eb] transition-colors"
                 >
@@ -453,7 +472,7 @@ export default function Comments({ postSlug }: CommentsProps) {
 
             {status === 'success' && (
               <div className="text-[#2d5016] dark:text-[#7a9a7a] text-sm bg-[#f0f9f0] dark:bg-[#1a2e1a] px-3 py-2 rounded-lg">
-                Thanks! Your comment has been submitted and will appear after approval.
+                Posted.
               </div>
             )}
 

@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import { CMS_LOGIN_PATH } from '@/app/lib/auth'
+import { CMS_LOGIN_PATH, getSessionCookieName } from '@/app/lib/auth'
 
 export async function POST(request: Request) {
   try {
     const cookieStore = await cookies()
-    cookieStore.delete('cms_session')
+    cookieStore.delete(getSessionCookieName())
 
     const url = new URL(request.url)
     return NextResponse.redirect(new URL(CMS_LOGIN_PATH, url.origin))
@@ -14,6 +14,3 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false, error: 'Logout failed' }, { status: 500 })
   }
 }
-
-
-

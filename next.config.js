@@ -15,7 +15,13 @@ const nextConfig = {
   },
   // Optimize for production
   swcMinify: true,
-  // Security headers
+  async redirects() {
+    return [
+      { source: '/admin', destination: '/cms-x8k2', permanent: true },
+      { source: '/admin/login', destination: '/cms-x8k2/login', permanent: true },
+      { source: '/admin/:path*', destination: '/cms-x8k2/:path*', permanent: true },
+    ]
+  },
   async headers() {
     return [
       {

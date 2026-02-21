@@ -2,10 +2,11 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import { CMS_PATH } from '@/app/lib/cms-constants'
 
-export default function LoginPage() {
+export default function CMSLoginPage() {
   const router = useRouter()
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -16,19 +17,19 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
-      const response = await fetch('/api/admin/login', {
+      const response = await fetch('/api/cms-x8k2/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ username, password }),
       })
 
       const data = await response.json()
 
       if (data.ok) {
-        router.push('/admin')
+        router.push(CMS_PATH)
         router.refresh()
       } else {
-        setError(data.error || 'Invalid password')
+        setError(data.error || 'Invalid username or password')
       }
     } catch (err) {
       setError('Something went wrong. Please try again.')
@@ -43,14 +44,33 @@ export default function LoginPage() {
         <div className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-xl p-8 shadow-sm">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-serif font-bold text-[#2d3748] dark:text-[#e5e7eb] mb-2">
-              Admin Login
+              Sign in
             </h1>
             <p className="text-[#718096] dark:text-[#9ca3af] text-sm">
-              Enter password to access comment management
+              Username and password required
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-[#4a5568] dark:text-[#9ca3af] mb-2"
+              >
+                Username
+              </label>
+              <input
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg bg-white dark:bg-[#1f1f1f] border border-[#e2e8f0] dark:border-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb] placeholder-[#a0aec0] focus:outline-none focus:ring-2 focus:ring-[#6b8e6b]"
+                placeholder="Username"
+                required
+                autoFocus
+                autoComplete="username"
+              />
+            </div>
             <div>
               <label
                 htmlFor="password"
@@ -64,9 +84,9 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 rounded-lg bg-white dark:bg-[#1f1f1f] border border-[#e2e8f0] dark:border-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb] placeholder-[#a0aec0] focus:outline-none focus:ring-2 focus:ring-[#6b8e6b]"
-                placeholder="Enter admin password"
+                placeholder="Password"
                 required
-                autoFocus
+                autoComplete="current-password"
               />
             </div>
 
@@ -81,22 +101,15 @@ export default function LoginPage() {
               disabled={loading}
               className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Logging in...' : 'Login'}
+              {loading ? 'Signing in...' : 'Sign in'}
             </button>
           </form>
 
           <p className="mt-6 text-center text-sm text-[#718096] dark:text-[#9ca3af]">
-            Admin URL is not linked from any public page. Use your bookmark.
+            This URL is not linked from any public page.
           </p>
         </div>
-
-        <p className="mt-6 text-center text-xs text-[#718096] dark:text-[#9ca3af]">
-          This is a protected admin area. Unauthorized access is prohibited.
-        </p>
       </div>
     </div>
   )
 }
-
-
-

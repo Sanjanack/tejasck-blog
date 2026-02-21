@@ -5,7 +5,7 @@ import type { Metadata } from 'next'
 import { getPostBySlug, getPostContent, getAllPosts } from '../../lib/posts'
 import Comments from '../../components/Comments'
 import ReadingProgress from '../../components/ReadingProgress'
-import PostLikeButton from '../../components/PostLikeButton'
+import PostReactions from '../../components/PostReactions'
 import PostTags from '../../components/PostTags'
 import SocialShare from '../../components/SocialShare'
 import PostNavigation from '../../components/PostNavigation'
@@ -162,7 +162,7 @@ export default async function PostPage({ params }: PostPageProps) {
           </article>
 
           <div className="mt-8 mb-8">
-            <PostLikeButton postSlug={params.slug} />
+            <PostReactions postSlug={params.slug} />
           </div>
 
           <div className="mb-8">

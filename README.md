@@ -18,7 +18,7 @@ A multi-series publishing hub for Tejas C.K. The first live series is **Letters 
 - **@tailwindcss/typography** for letter content
 - **gray-matter** + **remark** for Markdown parsing
 - **TypeScript** for type safety
-- **Prisma + SQLite** for Ask submissions
+- **Prisma + SQLite** (local dev) / **PostgreSQL** (production) for comments, reactions, Ask submissions, and admin
 - **Resend** for transactional email delivery
 
 ## Project Overview (BTech-friendly)

@@ -77,7 +77,7 @@ export default function Home() {
         </div>
 
         {/* Series Cards */}
-        <section className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto mb-20">
+        <section id="series" className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto mb-20">
           {futureSeries.map((series, index) => (
             <FloatingCard key={series.title} delay={index * 100}>
               <Link

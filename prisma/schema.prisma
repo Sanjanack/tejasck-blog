@@ -21,9 +21,7 @@ model Comment {
   id        String   @id @default(cuid())
   postSlug  String
   name      String
-  email     String?
   message   String
-  approved  Boolean  @default(false)
   parentId  String?  // For replies
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -57,4 +55,19 @@ model PostLike {
 
   @@unique([userId, postSlug])
   @@index([postSlug])
+}
+
+model PostReaction {
+  id          String   @id @default(cuid())
+  userId      String
+  postSlug    String
+  type        String   // 'like', 'love', 'laugh', 'wow', 'sad', 'angry'
+  displayName String?  // stored only if user chooses to show their name
+  anonymous   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, postSlug])
+  @@index([postSlug])
+  @@index([postSlug, type])
 }
