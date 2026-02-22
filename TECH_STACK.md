@@ -4,6 +4,17 @@ This document explains the tech stack used for the blog and how each backend fea
 
 ---
 
+## Backend Architecture
+
+The project uses **Next.js 14 (App Router)** as the full-stack framework. There is no separate backend server:
+
+- **API Routes**: `/app/api/*` — serverless functions that handle HTTP requests
+- **Database**: **Prisma ORM** with **SQLite** (dev) or **PostgreSQL** (prod). Schema in `prisma/schema.prisma`
+- **Posts**: Stored as **Markdown files** in `posts/`, not in the database. Frontmatter parsed with `gray-matter`
+- **Comments, reactions, Ask**: Stored in the database via Prisma
+
+---
+
 ## Tech Stack Overview
 
 | Layer | Technology |
@@ -23,8 +34,8 @@ This document explains the tech stack used for the blog and how each backend fea
 
 ### 1. Comments & Replies
 - **API**: `POST /api/comments` (create), `GET /api/comments?postSlug=...` (list)
-- **Database**: `Comment` model with `parentId` for nested replies
-- **Flow**: Comments and replies appear instantly (no moderation)
+- **Database**: `Comment` model with `parentId` for nested replies. Top-level comments have `parentId: null`; replies have `parentId` pointing to the parent
+- **Flow**: Comments and replies appear instantly (no moderation). Users click **Reply** under a comment to post a reply; the frontend sends `parentId` to nest it under that comment
 - **Auth**: None required for readers
 
 ### 2. Comment Reactions
@@ -57,6 +68,7 @@ This document explains the tech stack used for the blog and how each backend fea
 | Variable | Required | Purpose |
 |----------|----------|---------|
 | `DATABASE_URL` | Yes | Prisma connection (SQLite or PostgreSQL) |
+| `ADMIN_USERNAME` | Yes | Admin login username |
 | `ADMIN_PASSWORD` | Yes | Admin login password |
 | `ADMIN_SESSION_SECRET` | Yes (prod) | Session token for admin auth |
 | `RESEND_API_KEY` | No | Email for Ask notifications |
@@ -91,9 +103,9 @@ This document explains the tech stack used for the blog and how each backend fea
 
 ---
 
-## Admin Area
+## Admin / CMS Area
 
-- **URL**: `/admin` (not linked from any public page)
-- **Login**: `/admin/login` — password from `ADMIN_PASSWORD`
-- **Sections**: Dashboard, Posts, Comments, Ask Submissions
-- **robots.txt**: Disallows `/admin/` so search engines don’t index it
+- **URL**: `/cms-x8k2` (obscure path, not linked from any public page)
+- **Login**: `/cms-x8k2/login` — username + password from `ADMIN_USERNAME` and `ADMIN_PASSWORD`
+- **Sections**: Dashboard, Posts, Comments, Ask Submissions, Handbook
+- **robots.txt**: Disallows `/cms-x8k2/` so search engines don’t index it

@@ -20,6 +20,7 @@ export type PostEditorInitial = {
     coverImageAlt?: string
   }
   content: string
+  existingSeries?: string[]
 }
 
 function normalizeSlugClient(input: string): string {
@@ -44,6 +45,7 @@ function tagsFromString(input: string) {
 }
 
 export default function PostEditor({ mode, initial }: { mode: EditorMode; initial: PostEditorInitial }) {
+  const existingSeries = initial.existingSeries ?? []
   const router = useRouter()
   const textareaRef = useRef<HTMLTextAreaElement | null>(null)
 
@@ -65,6 +67,11 @@ export default function PostEditor({ mode, initial }: { mode: EditorMode; initia
 
   const [previewOpen, setPreviewOpen] = useState(false)
   const [previewHtml, setPreviewHtml] = useState<string>('')
+  const [editorFullScreen, setEditorFullScreen] = useState(false)
+  const [previewFullScreen, setPreviewFullScreen] = useState(false)
+  const [seriesMode, setSeriesMode] = useState<'select' | 'new'>(
+    existingSeries.length > 0 && existingSeries.includes(initial.frontmatter.series) ? 'select' : 'new'
+  )
 
   const frontmatter = useMemo(
     () => ({
@@ -271,11 +278,50 @@ export default function PostEditor({ mode, initial }: { mode: EditorMode; initia
                 </div>
                 <div className="grid gap-2">
                   <label className="text-sm font-medium text-[#4a5568] dark:text-[#9ca3af]">Series</label>
-                  <input
-                    value={series}
-                    onChange={(e) => setSeries(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-white dark:bg-[#1f1f1f] border border-[#e2e8f0] dark:border-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb]"
-                  />
+                  {seriesMode === 'select' && existingSeries.length > 0 ? (
+                    <div className="flex gap-2 items-center">
+                      <select
+                        value={series}
+                        onChange={(e) => setSeries(e.target.value)}
+                        className="flex-1 px-3 py-2 rounded-lg bg-white dark:bg-[#1f1f1f] border border-[#e2e8f0] dark:border-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb]"
+                      >
+                        {existingSeries.map((s) => (
+                          <option key={s} value={s}>{s}</option>
+                        ))}
+                      </select>
+                      <button
+                        type="button"
+                        onClick={() => { setSeriesMode('new'); setSeries('') }}
+                        className="text-sm text-[#6b8e6b] dark:text-[#7a9a7a] hover:underline whitespace-nowrap"
+                      >
+                        + New
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <input
+                        value={series}
+                        onChange={(e) => setSeries(e.target.value)}
+                        placeholder="e.g. Letters from Schmalkalden"
+                        className="flex-1 px-3 py-2 rounded-lg bg-white dark:bg-[#1f1f1f] border border-[#e2e8f0] dark:border-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb]"
+                      />
+                      {existingSeries.length > 0 && (
+                        <select
+                          value=""
+                          onChange={(e) => {
+                            const v = e.target.value
+                            if (v) { setSeriesMode('select'); setSeries(v) }
+                          }}
+                          className="px-3 py-2 rounded-lg bg-white dark:bg-[#1f1f1f] border border-[#e2e8f0] dark:border-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb]"
+                        >
+                          <option value="">Choose existing</option>
+                          {existingSeries.map((s) => (
+                            <option key={s} value={s}>{s}</option>
+                          ))}
+                        </select>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -337,7 +383,7 @@ export default function PostEditor({ mode, initial }: { mode: EditorMode; initia
                   />
                 </label>
                 <p className="text-xs text-[#718096] dark:text-[#9ca3af]">
-                  Uploads to Cloudinary via <code className="px-1 py-0.5 rounded bg-black/5 dark:bg-white/10">/api/upload</code> and inserts markdown.
+                  Cloudinary (max 5MB). Or use <code className="px-1 py-0.5 rounded bg-black/5 dark:bg-white/10">![alt](url)</code> in markdown for any image URL.
                 </p>
               </div>
 
@@ -360,26 +406,70 @@ export default function PostEditor({ mode, initial }: { mode: EditorMode; initia
           <section className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-2xl p-6 shadow-lg">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold text-[#2d3748] dark:text-[#e5e7eb]">Content</h2>
-              <div className="text-xs text-[#718096] dark:text-[#9ca3af]">Markdown</div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setEditorFullScreen((v) => !v)}
+                  className="text-xs text-[#6b8e6b] dark:text-[#7a9a7a] hover:underline px-2 py-1"
+                >
+                  {editorFullScreen ? 'Exit full screen' : 'Full screen'}
+                </button>
+                <span className="text-xs text-[#718096] dark:text-[#9ca3af]">Markdown</span>
+              </div>
             </div>
 
             <div className="grid gap-6">
-              <textarea
-                ref={textareaRef}
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                className="w-full min-h-[420px] font-mono text-sm px-4 py-3 rounded-xl bg-white dark:bg-[#1f1f1f] border border-[#e2e8f0] dark:border-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb] focus:outline-none focus:ring-2 focus:ring-[#6b8e6b]"
-                placeholder="Write your post in Markdown..."
-              />
+              <div className={editorFullScreen ? 'fixed inset-4 z-[100] flex flex-col bg-white dark:bg-[#252525] rounded-xl border-2 border-[#6b8e6b] dark:border-[#7a9a7a] shadow-2xl' : ''}>
+                {editorFullScreen && (
+                  <div className="flex justify-between items-center px-4 py-2 border-b border-[#e2e8f0] dark:border-[#4a5568]">
+                    <span className="text-sm font-medium text-[#2d3748] dark:text-[#e5e7eb]">Editing (Markdown)</span>
+                    <button
+                      type="button"
+                      onClick={() => setEditorFullScreen(false)}
+                      className="px-3 py-1 rounded-lg bg-[#e2e8f0] dark:bg-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb] hover:bg-[#cbd5e0] dark:hover:bg-[#2d3748]"
+                    >
+                      ✕ Close
+                    </button>
+                  </div>
+                )}
+                <textarea
+                  ref={textareaRef}
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  className={`w-full font-mono text-sm px-4 py-3 rounded-xl bg-white dark:bg-[#1f1f1f] border border-[#e2e8f0] dark:border-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb] focus:outline-none focus:ring-2 focus:ring-[#6b8e6b] ${editorFullScreen ? 'flex-1 min-h-0 resize-none' : 'min-h-[420px]'}`}
+                  placeholder="Write your post in Markdown..."
+                />
+              </div>
 
               {previewOpen && (
-                <div className="rounded-xl border border-[#e2e8f0] dark:border-[#4a5568] bg-[#faf9f7] dark:bg-[#1a1a1a] p-6">
-                  <div className="prose prose-lg max-w-none">
+                <div className={previewFullScreen ? 'fixed inset-4 z-[100] flex flex-col bg-[#faf9f7] dark:bg-[#1a1a1a] rounded-xl border-2 border-[#6b8e6b] dark:border-[#7a9a7a] shadow-2xl overflow-auto' : 'rounded-xl border border-[#e2e8f0] dark:border-[#4a5568] bg-[#faf9f7] dark:bg-[#1a1a1a] p-6'}>
+                  {previewFullScreen && (
+                    <div className="flex justify-between items-center px-4 py-2 border-b border-[#e2e8f0] dark:border-[#4a5568] flex-shrink-0">
+                      <span className="text-sm font-medium text-[#2d3748] dark:text-[#e5e7eb]">Preview</span>
+                      <button
+                        type="button"
+                        onClick={() => setPreviewFullScreen(false)}
+                        className="px-3 py-1 rounded-lg bg-[#e2e8f0] dark:bg-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb] hover:bg-[#cbd5e0] dark:hover:bg-[#2d3748]"
+                      >
+                        ✕ Close
+                      </button>
+                    </div>
+                  )}
+                  <div className={`prose prose-lg max-w-none ${previewFullScreen ? 'p-6 flex-1 overflow-auto' : ''}`}>
                     <div dangerouslySetInnerHTML={{ __html: previewHtml }} />
                   </div>
                 </div>
               )}
             </div>
+            {previewOpen && !previewFullScreen && (
+              <button
+                type="button"
+                onClick={() => setPreviewFullScreen(true)}
+                className="mt-2 text-xs text-[#6b8e6b] dark:text-[#7a9a7a] hover:underline"
+              >
+                Full screen preview
+              </button>
+            )}
           </section>
         </div>
       </div>

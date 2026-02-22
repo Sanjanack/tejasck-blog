@@ -1,10 +1,11 @@
 ---
-title: "My First Week in Schmalkalden"
-date: "2024-01-15"
-excerpt: "The beginning of an incredible journey in Germany. First impressions, challenges, and the excitement of starting a new chapter in life."
-series: "Letters from Schmalkalden"
+title: My First Week in Schmalkalden
+date: '2026-02-20'
+excerpt: >-
+  The beginning of an incredible journey in Germany. First impressions,
+  challenges, and the excitement of starting a new chapter in life.
+series: Letters from Schmalkalden
 ---
-
 # My First Week in Schmalkalden
 
 *January 15, 2024*

@@ -33,7 +33,10 @@ export async function POST(request: Request) {
     const cloudinaryCloudName = process.env.CLOUDINARY_CLOUD_NAME
 
     if (!cloudinaryUploadPreset || !cloudinaryCloudName) {
-      return NextResponse.json({ ok: false, error: 'Cloudinary not configured' }, { status: 500 })
+      return NextResponse.json({
+        ok: false,
+        error: 'Cloudinary not configured. Add CLOUDINARY_CLOUD_NAME and CLOUDINARY_UPLOAD_PRESET to .env. Max 5MB per image.',
+      }, { status: 500 })
     }
 
     const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`
@@ -57,7 +60,13 @@ export async function POST(request: Request) {
     if (!cloudinaryResponse.ok) {
       const error = await cloudinaryResponse.text()
       console.error('Cloudinary upload error:', error)
-      return NextResponse.json({ ok: false, error: 'Upload failed' }, { status: 500 })
+      try {
+        const errJson = JSON.parse(error)
+        const msg = errJson?.error?.message || errJson?.message || error
+        return NextResponse.json({ ok: false, error: `Cloudinary: ${msg}. Max 5MB.` }, { status: 500 })
+      } catch {
+        return NextResponse.json({ ok: false, error: 'Cloudinary upload failed. Check env vars and upload preset. Max 5MB.' }, { status: 500 })
+      }
     }
 
     const cloudinaryData = await cloudinaryResponse.json()
