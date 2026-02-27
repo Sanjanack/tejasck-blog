@@ -26,13 +26,6 @@ export async function POST(request: Request) {
   const authenticated = await isAuthenticated()
   if (!authenticated) return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 })
 
-  if (process.env.VERCEL) {
-    return NextResponse.json(
-      { ok: false, error: 'Post editing is disabled on Vercel (filesystem is read-only / non-persistent). Edit markdown in git instead.' },
-      { status: 400 }
-    )
-  }
-
   try {
     const body = await request.json()
     const parsed = CreateSchema.parse(body)

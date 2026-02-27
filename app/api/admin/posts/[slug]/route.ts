@@ -37,13 +37,6 @@ export async function PUT(request: Request, { params }: { params: { slug: string
   const authenticated = await isAuthenticated()
   if (!authenticated) return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 })
 
-  if (process.env.VERCEL) {
-    return NextResponse.json(
-      { ok: false, error: 'Post editing is disabled on Vercel (filesystem is read-only / non-persistent). Edit markdown in git instead.' },
-      { status: 400 }
-    )
-  }
-
   try {
     const body = await request.json()
     const parsed = UpdateSchema.parse(body)
@@ -64,13 +57,6 @@ export async function PUT(request: Request, { params }: { params: { slug: string
 export async function DELETE(_request: Request, { params }: { params: { slug: string } }) {
   const authenticated = await isAuthenticated()
   if (!authenticated) return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 })
-
-  if (process.env.VERCEL) {
-    return NextResponse.json(
-      { ok: false, error: 'Post deletion is disabled on Vercel (filesystem is read-only / non-persistent). Delete markdown in git instead.' },
-      { status: 400 }
-    )
-  }
 
   try {
     await deletePostFile(params.slug)

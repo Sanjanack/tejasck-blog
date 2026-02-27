@@ -30,12 +30,6 @@ export default async function CMSPostsPage() {
         <Link href={`${CMS_PATH}/posts/new`} className="btn-primary">+ New Post</Link>
       </div>
 
-      {process.env.VERCEL && (
-        <div className="mb-8 rounded-xl border border-[#f59e0b] dark:border-[#fbbf24] bg-[#fffbeb] dark:bg-[#2e1f0a] px-6 py-4 text-sm text-[#92400e] dark:text-[#fbbf24]">
-          Post editing is disabled on Vercel. Edit Markdown in <code className="px-1 py-0.5 rounded bg-black/5">posts/</code> and redeploy.
-        </div>
-      )}
-
       <div className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
