@@ -5,6 +5,7 @@ import { remark } from 'remark'
 import remarkHtml from 'remark-html'
 import { cache } from 'react'
 import { prisma } from './prisma'
+import { ORDERED_POST_SLUGS } from './postOrder'
 
 const postsDirectory = path.join(process.cwd(), 'posts')
 const SERIES_OLD = 'Letters from Schmalkalden'
@@ -29,6 +30,23 @@ let postTableStatus: 'unknown' | 'available' | 'missing' = 'unknown'
 let didRenameSeries = false
 let lastFilesystemSyncAt = 0
 const fileSyncState = new Map<string, number>()
+
+function sortPostsWithManualOrder(posts: Post[]): Post[] {
+  const rank = new Map<string, number>()
+  ORDERED_POST_SLUGS.forEach((slug, idx) => rank.set(slug, idx))
+
+  return [...posts].sort((a, b) => {
+    const aRank = rank.get(a.slug)
+    const bRank = rank.get(b.slug)
+    const aPinned = aRank !== undefined
+    const bPinned = bRank !== undefined
+
+    if (aPinned && bPinned) return (aRank as number) - (bRank as number)
+    if (aPinned) return -1
+    if (bPinned) return 1
+    return a.date > b.date ? 1 : -1
+  })
+}
 
 async function syncFilesystemToDatabaseInDevIfNeeded() {
   if (process.env.NODE_ENV === 'production') return
@@ -226,7 +244,7 @@ function getAllPostsFromFilesystem(): Post[] {
     if (!fs.existsSync(postsDirectory)) return []
     const fileNames = fs.readdirSync(postsDirectory).filter((fileName) => fileName.endsWith('.md'))
 
-    return fileNames
+    const posts = fileNames
       .map((fileName) => {
         const slug = fileName.replace(/\.md$/, '')
         const fullPath = path.join(postsDirectory, fileName)
@@ -257,7 +275,7 @@ function getAllPostsFromFilesystem(): Post[] {
           coverImageAlt: data.coverImageAlt ? String(data.coverImageAlt) : undefined,
         }
       })
-      .sort((a, b) => (a.date < b.date ? 1 : -1))
+    return sortPostsWithManualOrder(posts)
   } catch (e) {
     console.error('Error reading posts from filesystem:', e)
     return []
@@ -309,10 +327,10 @@ export const getAllPosts = maybeCache(async (): Promise<Post[]> => {
   await syncFilesystemToDatabaseInDevIfNeeded()
 
   const rows = await prisma.post.findMany({
-    orderBy: { date: 'desc' },
+    orderBy: { date: 'asc' },
   })
 
-  return rows.map((row) => {
+  const posts = rows.map((row) => {
     const content = row.content
     const wordCount = content.split(/\s+/).filter(Boolean).length
     const readingTime = Math.ceil(wordCount / 200)
@@ -330,6 +348,8 @@ export const getAllPosts = maybeCache(async (): Promise<Post[]> => {
       coverImageAlt: row.coverImageAlt || undefined,
     }
   })
+
+  return sortPostsWithManualOrder(posts)
 })
 
 // Cached version for better performance (DB-backed)
@@ -431,9 +451,9 @@ export async function getPostsBySeries(): Promise<Record<string, Post[]>> {
     grouped[series].push(post)
   })
 
-  // Sort posts within each series by date (newest first)
+  // Sort posts within each series with the same global ordering rules.
   Object.keys(grouped).forEach((series) => {
-    grouped[series].sort((a, b) => (a.date < b.date ? 1 : -1))
+    grouped[series] = sortPostsWithManualOrder(grouped[series])
   })
 
   return grouped

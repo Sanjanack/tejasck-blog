@@ -1,6 +1,6 @@
 ---
 title: First-letter from Schmalkalden
-date: '2026-04-15'
+date: '2026-04-14'
 excerpt: >-
   The beginning of an incredible journey in Germany. First impressions,
   challenges, and the excitement of starting a new chapter in life.

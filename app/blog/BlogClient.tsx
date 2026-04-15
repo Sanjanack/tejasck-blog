@@ -38,9 +38,9 @@ function BlogClientContent({ posts }: { posts: PostClient[] }) {
       }
       grouped[series].push(post)
     })
-    // Sort posts within each series by date (newest first)
+    // Sort posts within each series by date (oldest first)
     Object.keys(grouped).forEach((series) => {
-      grouped[series].sort((a, b) => (a.date < b.date ? 1 : -1))
+      grouped[series].sort((a, b) => (a.date > b.date ? 1 : -1))
     })
     return grouped
   }, [posts])
@@ -214,10 +214,9 @@ function BlogClientContent({ posts }: { posts: PostClient[] }) {
                 return (
                   <div key={series} className="animate-fade-in">
                     <div className="mb-8 pb-4 border-b border-[#e2e8f0] dark:border-[#4a5568]">
-                      <h1 className="text-3xl sm:text-4xl font-serif font-bold text-[#2d3748] dark:text-[#e5e7eb] mb-2 inline-flex items-center gap-3">
-                        {/* <IconBook className="w-6 h-6 text-[#6b8e6b] dark:text-[#7a9a7a]" /> */}
+                      <h2 className="text-4xl sm:text-4xl font-serif font-bold text-[#2d3748] dark:text-[#e5e7eb] mb-2 inline-flex items-center gap-3">
                         {series}
-                      </h1>
+                      </h2>
                       <p className="text-[#718096] dark:text-[#9ca3af]">
                         {seriesPosts.length} letter{seriesPosts.length !== 1 ? 's' : ''}
                       </p>
