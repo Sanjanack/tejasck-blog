@@ -1,15 +1,16 @@
 import { prisma } from '@/app/lib/prisma'
 import { isAuthenticated } from '@/app/lib/auth'
-import { redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getAllPosts } from '@/app/lib/posts'
+import { IconComments, IconDashboard, IconHeart, IconMail, IconPosts } from '@/app/components/Icons'
 
 export default async function AdminDashboard() {
   // Check authentication
   const authenticated = await isAuthenticated()
   
   if (!authenticated) {
-    redirect('/admin/login')
+    notFound()
   }
 
   // Get stats
@@ -49,7 +50,7 @@ export default async function AdminDashboard() {
                 <p className="text-3xl font-bold text-[#2d3748] dark:text-[#e5e7eb]">{stats.totalPosts}</p>
               </div>
               <div className="w-12 h-12 bg-[#f0f4f0] dark:bg-[#2d3a2d] rounded-lg flex items-center justify-center">
-                <span className="text-2xl">📝</span>
+                <IconPosts className="w-6 h-6" />
               </div>
             </div>
           </div>
@@ -63,7 +64,7 @@ export default async function AdminDashboard() {
                 </p>
               </div>
               <div className="w-12 h-12 bg-[#f0f4f7] dark:bg-[#2d3a3f] rounded-lg flex items-center justify-center">
-                <span className="text-2xl">💬</span>
+                <IconComments className="w-6 h-6" />
               </div>
             </div>
           </div>
@@ -76,7 +77,7 @@ export default async function AdminDashboard() {
                 <p className="text-xs text-[#718096] dark:text-[#9ca3af] mt-1">+ {stats.totalLikes} likes</p>
               </div>
               <div className="w-12 h-12 bg-[#fef2f2] dark:bg-[#2e1a1a] rounded-lg flex items-center justify-center">
-                <span className="text-2xl">❤️</span>
+                <IconHeart className="w-6 h-6" />
               </div>
             </div>
           </div>
@@ -88,7 +89,7 @@ export default async function AdminDashboard() {
                 <p className="text-3xl font-bold text-[#2d3748] dark:text-[#e5e7eb]">{stats.totalAskSubmissions}</p>
               </div>
               <div className="w-12 h-12 bg-[#f0f4f7] dark:bg-[#2d3a3f] rounded-lg flex items-center justify-center">
-                <span className="text-2xl">✉️</span>
+                <IconMail className="w-6 h-6" />
               </div>
             </div>
           </div>
@@ -102,7 +103,7 @@ export default async function AdminDashboard() {
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-[#f0f4f0] dark:bg-[#2d3a2d] rounded-lg flex items-center justify-center">
-                <span className="text-2xl">📝</span>
+                <IconPosts className="w-6 h-6" />
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-[#2d3748] dark:text-[#e5e7eb] mb-1">
@@ -121,7 +122,7 @@ export default async function AdminDashboard() {
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-[#f0f4f7] dark:bg-[#2d3a3f] rounded-lg flex items-center justify-center">
-                <span className="text-2xl">💬</span>
+                <IconComments className="w-6 h-6" />
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-[#2d3748] dark:text-[#e5e7eb] mb-1">
@@ -140,7 +141,7 @@ export default async function AdminDashboard() {
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-[#f0f4f7] dark:bg-[#2d3a3f] rounded-lg flex items-center justify-center">
-                <span className="text-2xl">✉️</span>
+                <IconMail className="w-6 h-6" />
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-[#2d3748] dark:text-[#e5e7eb] mb-1">

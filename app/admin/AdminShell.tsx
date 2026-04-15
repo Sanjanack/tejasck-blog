@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { IconComments, IconDashboard, IconMail, IconPosts, IconLogout } from '../components/Icons'
 
 interface AdminShellProps {
   children: React.ReactNode
@@ -22,10 +23,10 @@ export default function AdminShell({ children }: AdminShellProps) {
 
   // All other admin pages: sidebar + content
   const nav = [
-    { href: '/admin', label: 'Dashboard', icon: '📊' },
-    { href: '/admin/posts', label: 'Posts', icon: '📝' },
-    { href: '/admin/comments', label: 'Comments', icon: '💬' },
-    { href: '/admin/ask', label: 'Ask Submissions', icon: '✉️' },
+    { href: '/admin', label: 'Dashboard', icon: <IconDashboard className="w-5 h-5" /> },
+    { href: '/admin/posts', label: 'Posts', icon: <IconPosts className="w-5 h-5" /> },
+    { href: '/admin/comments', label: 'Comments', icon: <IconComments className="w-5 h-5" /> },
+    { href: '/admin/ask', label: 'Ask Submissions', icon: <IconMail className="w-5 h-5" /> },
   ]
 
   return (
@@ -51,7 +52,7 @@ export default function AdminShell({ children }: AdminShellProps) {
                   : 'text-[#4a5568] dark:text-[#9ca3af] hover:bg-[#f7fafc] dark:hover:bg-[#2d2d2d]'
               }`}
             >
-              <span>{item.icon}</span>
+              <span className="inline-flex">{item.icon}</span>
               {item.label}
             </Link>
           ))}
@@ -62,7 +63,7 @@ export default function AdminShell({ children }: AdminShellProps) {
               type="submit"
               className="w-full flex items-center gap-2 px-4 py-2 text-sm text-[#718096] dark:text-[#9ca3af] hover:text-[#991b1b] dark:hover:text-[#fca5a5] transition-colors rounded-lg hover:bg-[#fef2f2] dark:hover:bg-[#2e1a1a]"
             >
-              <span>🚪</span> Log out
+              <span className="inline-flex"><IconLogout className="w-5 h-5" /></span> Log out
             </button>
           </form>
         </div>

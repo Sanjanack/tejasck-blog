@@ -1,16 +1,26 @@
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
+import { unstable_noStore as noStore } from 'next/cache'
 import { getAllPosts } from './lib/posts'
 import FloatingCard from './components/FloatingCard'
-import AnimatedGlobe from './components/AnimatedGlobe'
+import { IconCode, IconMail } from './components/Icons'
+
+const AnimatedGlobe = dynamic(() => import('./components/AnimatedGlobe'), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[260px] w-full rounded-2xl border border-[#e2e8f0] dark:border-[#4a5568] bg-white/60 dark:bg-[#252525]/60" />
+  ),
+})
+
 
 const futureSeries = [
   {
-    title: 'Letters from Schmalkalden',
+    title: 'From Filter Coffee to German Bread',
     status: 'Live Now',
-    description: 'Study-vlog diary from Germany',
+    description: 'How I went from home comfort to life abroad',
     accent: '#6b8e6b',
     href: '/blog',
-    icon: '✉️',
+    // icon: <IconMail className="w-10 h-10 text-[var(--accent-from)] hover:text-[var(--accent-to)] transition" />,
   },
   {
     title: 'Tejas C.K Bytes',
@@ -18,12 +28,16 @@ const futureSeries = [
     description: 'Tech lessons distilled',
     accent: '#6b8e6b',
     locked: true,
-    icon: '💻',
+    // icon: <IconCode className="w-10 h-10 text-[#6b8e6b] dark:text-[#7a9a7a]" />,
   },
 ]
 
-export default function Home() {
-  const posts = getAllPosts()
+export default async function Home() {
+  if (process.env.NODE_ENV !== 'production') {
+    noStore()
+  }
+
+  const posts = await getAllPosts()
   const totalPosts = posts.length
 
   return (
@@ -43,14 +57,14 @@ export default function Home() {
           </div>
           
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-serif font-bold text-[#2d3748] dark:text-[#e5e7eb] leading-tight animate-slide-up">
-            Stories from
+            Letters from
             <span className="block mt-2 bg-gradient-to-r from-[#6b8e6b] to-[#5b7c99] bg-clip-text text-transparent">
               Schmalkalden
             </span>
           </h1>
 
           <p className="text-xl sm:text-2xl text-[#4a5568] dark:text-[#9ca3af] max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: '0.1s' }}>
-            A study-abroad diary from Germany
+          Stories and steps from a study abroad journey in Germany
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up" style={{ animationDelay: '0.2s' }}>
@@ -87,7 +101,6 @@ export default function Home() {
                 }`}
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className="text-4xl">{series.icon}</div>
                   <span className={`text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full ${
                     series.status === 'Live Now' 
                       ? 'bg-[#f0f4f0] text-[#5a7a5a] dark:bg-[#2d3a2d] dark:text-[#7a9a7a]'

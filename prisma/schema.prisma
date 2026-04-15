@@ -71,3 +71,22 @@ model PostReaction {
   @@index([postSlug])
   @@index([postSlug, type])
 }
+
+model Post {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  title        String
+  date         DateTime
+  excerpt      String
+  content      String
+  tags         String[] @default([])
+  series       String   @default("From Filter Coffee to German Bread")
+  coverImage   String?
+  coverImageAlt String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([slug])
+  @@index([date])
+  @@index([series])
+}

@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import type { ReactNode } from 'react'
+import { IconAngry, IconHeart, IconSad, IconSmile, IconSurprised, IconThumbsUp } from './Icons'
 
 interface Comment {
   id: string
@@ -17,13 +19,13 @@ interface CommentsProps {
   postSlug: string
 }
 
-const REACTION_EMOJIS: Record<string, string> = {
-  like: '👍',
-  love: '❤️',
-  laugh: '😂',
-  wow: '😮',
-  sad: '😢',
-  angry: '😠',
+const REACTION_ICONS: Record<string, ReactNode> = {
+  like: <IconThumbsUp className="w-5 h-5" />,
+  love: <IconHeart className="w-5 h-5" />,
+  laugh: <IconSmile className="w-5 h-5" />,
+  wow: <IconSurprised className="w-5 h-5" />,
+  sad: <IconSad className="w-5 h-5" />,
+  angry: <IconAngry className="w-5 h-5" />,
 }
 
 export default function Comments({ postSlug }: CommentsProps) {
@@ -222,7 +224,7 @@ export default function Comments({ postSlug }: CommentsProps) {
               >
                 {userReaction ? (
                   <>
-                    <span>{REACTION_EMOJIS[userReaction]}</span>
+                    <span className="inline-flex">{REACTION_ICONS[userReaction]}</span>
                     <span>{reactions[userReaction] || 0}</span>
                   </>
                 ) : (
@@ -237,7 +239,7 @@ export default function Comments({ postSlug }: CommentsProps) {
 
               {showReactionPicker && (
                 <div className="absolute bottom-full left-0 mb-2 bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-lg shadow-xl p-2 flex gap-1 z-10">
-                  {Object.entries(REACTION_EMOJIS).map(([type, emoji]) => (
+                  {Object.entries(REACTION_ICONS).map(([type, icon]) => (
                     <button
                       key={type}
                       onClick={() => {
@@ -247,7 +249,7 @@ export default function Comments({ postSlug }: CommentsProps) {
                       className="w-8 h-8 flex items-center justify-center text-lg hover:scale-125 transition-transform rounded"
                       title={type}
                     >
-                      {emoji}
+                      <span className="inline-flex">{icon}</span>
                     </button>
                   ))}
                 </div>
@@ -260,7 +262,8 @@ export default function Comments({ postSlug }: CommentsProps) {
                     .slice(0, 3)
                     .map(([type, count]) => (
                       <span key={type}>
-                        {REACTION_EMOJIS[type]} {count}
+                        <span className="inline-flex align-middle mr-1">{REACTION_ICONS[type]}</span>
+                        {count}
                       </span>
                     ))}
                 </div>

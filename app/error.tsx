@@ -18,7 +18,11 @@ export default function Error({
     <div className="pt-16 min-h-screen bg-[#faf9f7] dark:bg-[#1a1a1a] flex items-center justify-center">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="mb-8">
-          <div className="text-6xl mb-4">⚠️</div>
+          <div className="mb-4">
+            <svg className="w-14 h-14 mx-auto text-[#991b1b]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v4m0 4h.01M10.29 3.86l-8.2 14.2A2 2 0 0 0 3.82 21h16.36a2 2 0 0 0 1.73-2.94l-8.2-14.2a2 2 0 0 0-3.42 0z" />
+            </svg>
+          </div>
           <h1 className="text-4xl sm:text-5xl font-serif font-bold text-[#2d3748] dark:text-[#e5e7eb] mb-6">
             Something went wrong
           </h1>

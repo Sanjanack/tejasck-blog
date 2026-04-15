@@ -4,7 +4,7 @@ export const runtime = 'edge'
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
-  const title = (searchParams.get('title') || 'Letters from Schmalkalden').slice(0, 120)
+  const title = (searchParams.get('title') || 'From Filter Coffee to German Bread').slice(0, 120)
 
   return new ImageResponse(
     (
@@ -26,7 +26,7 @@ export async function GET(request: Request) {
         <div style={{ height: 18 }} />
         <div style={{ fontSize: 72, fontWeight: 700, lineHeight: 1.05 }}>{title}</div>
         <div style={{ height: 28 }} />
-        <div style={{ fontSize: 30, opacity: 0.8 }}>Letters from Schmalkalden</div>
+        <div style={{ fontSize: 30, opacity: 0.8 }}>From Filter Coffee to German Bread</div>
         <div style={{ height: 38 }} />
         <div style={{ display: 'flex', gap: 12 }}>
           <div style={{ width: 14, height: 14, borderRadius: 999, background: '#6b8e6b' }} />

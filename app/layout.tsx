@@ -11,12 +11,12 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com'
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: 'Tejas C.K Studio · Letters & Vlogs',
-  description: 'A publishing hub for Tejas C.K—featuring Letters from Schmalkalden plus future travel and study vlog series.',
-  keywords: ['Tejas C.K', 'blog network', 'Germany vlog', 'Letters from Schmalkalden', 'study abroad'],
+  description: 'A publishing hub for Tejas C.K—featuring From Filter Coffee to German Bread plus future travel and study vlog series.',
+  keywords: ['Tejas C.K', 'blog network', 'Germany vlog', 'From Filter Coffee to German Bread', 'study abroad'],
   authors: [{ name: 'Tejas C.K Studio' }],
   openGraph: {
     title: 'Tejas C.K Studio · Letters & Vlogs',
-    description: "Letters from Schmalkalden is the first series in Tejas C.K's growing blog network.",
+    description: "From Filter Coffee to German Bread is the first series in Tejas C.K's growing blog network.",
     type: 'website',
     locale: 'en_US',
     url: siteUrl,
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Tejas C.K Studio · Letters & Vlogs',
-    description: "Letters from Schmalkalden is the first series in Tejas C.K's growing blog network.",
+    description: "From Filter Coffee to German Bread is the first series in Tejas C.K's growing blog network.",
   },
   robots: 'index, follow',
   alternates: {

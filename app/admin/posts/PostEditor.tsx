@@ -276,7 +276,7 @@ export default function PostEditor({ mode, initial }: { mode: EditorMode; initia
                     placeholder="YYYY-MM-DD"
                   />
                 </div>
-                <div className="grid gap-2">
+                <div className="grid gap-2 relative z-[120]">
                   <label className="text-sm font-medium text-[#4a5568] dark:text-[#9ca3af]">Series</label>
                   {seriesMode === 'select' && existingSeries.length > 0 ? (
                     <div className="flex gap-2 items-center">
@@ -302,7 +302,7 @@ export default function PostEditor({ mode, initial }: { mode: EditorMode; initia
                       <input
                         value={series}
                         onChange={(e) => setSeries(e.target.value)}
-                        placeholder="e.g. Letters from Schmalkalden"
+                        placeholder="e.g. From Filter Coffee to German Bread"
                         className="flex-1 px-3 py-2 rounded-lg bg-white dark:bg-[#1f1f1f] border border-[#e2e8f0] dark:border-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb]"
                       />
                       {existingSeries.length > 0 && (

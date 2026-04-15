@@ -1,11 +1,10 @@
 import { isAuthenticated } from '@/app/lib/auth'
-import { redirect } from 'next/navigation'
-import { CMS_LOGIN_PATH } from '@/app/lib/auth'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { CMS_PATH } from '@/app/lib/cms-constants'
 
 export default async function HandbookPage() {
-  if (!(await isAuthenticated())) redirect(CMS_LOGIN_PATH)
+  if (!(await isAuthenticated())) notFound()
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

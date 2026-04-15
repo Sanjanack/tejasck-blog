@@ -1,17 +1,34 @@
 import { isAuthenticated } from '@/app/lib/auth'
-import { redirect, notFound } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import PostEditor from '../../PostEditor'
-import { readPostFile } from '@/app/lib/postFiles'
+import { getPostBySlug } from '@/app/lib/posts'
 
 export default async function EditPostPage({ params }: { params: { slug: string } }) {
   const authenticated = await isAuthenticated()
-  if (!authenticated) redirect('/admin/login')
+  if (!authenticated) notFound()
 
-  try {
-    const post = await readPostFile(params.slug)
-    return <PostEditor mode="edit" initial={post} />
-  } catch {
+  const post = await getPostBySlug(params.slug)
+  if (!post) {
     notFound()
   }
+
+  return (
+    <PostEditor
+      mode="edit"
+      initial={{
+        slug: post.slug,
+        frontmatter: {
+          title: post.title,
+          date: post.date.slice(0, 10),
+          excerpt: post.excerpt,
+          tags: post.tags || [],
+          series: post.series || 'From Filter Coffee to German Bread',
+          coverImage: post.coverImage,
+          coverImageAlt: post.coverImageAlt,
+        },
+        content: post.content,
+      }}
+    />
+  )
 }
 

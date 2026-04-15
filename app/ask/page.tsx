@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from 'react'
+import { IconInbox, IconMail, IconVideo } from '@/app/components/Icons'
 
 export default function AskPage() {
   const [status, setStatus] = useState<'idle'|'submitting'|'success'|'error'>('idle')
@@ -170,10 +171,22 @@ export default function AskPage() {
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[#718096] dark:text-[#9ca3af]">How it works</p>
               <ul className="mt-4 space-y-4 text-sm text-[#4a5568] dark:text-[#9ca3af]">
-                <li>✉️ Fill the form — only subject & message are required.</li>
-                <li>📬 I read submissions daily in my private dashboard.</li>
-                <li>📹 Top questions become vlog or blog topics.</li>
-                <li>📧 If you leave an email, I reply directly from my inbox.</li>
+                <li>
+                  <IconMail className="inline w-4 h-4 mr-2" />
+                  Fill the form — only subject & message are required.
+                </li>
+                <li>
+                  <IconInbox className="inline w-4 h-4 mr-2" />
+                  I read submissions daily in my private dashboard.
+                </li>
+                <li>
+                  <IconVideo className="inline w-4 h-4 mr-2" />
+                  Top questions become vlog or blog topics.
+                </li>
+                <li>
+                  <IconMail className="inline w-4 h-4 mr-2" />
+                  If you leave an email, I reply directly from my inbox.
+                </li>
               </ul>
             </div>
             <div className="rounded-lg border border-dashed border-[#cbd5e0] dark:border-[#4a5568] p-4 text-sm text-[#4a5568] dark:text-[#9ca3af]">

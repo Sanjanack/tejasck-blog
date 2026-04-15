@@ -1,13 +1,13 @@
 import { prisma } from '@/app/lib/prisma'
 import { isAuthenticated } from '@/app/lib/auth'
-import { redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getAllPosts } from '@/app/lib/posts'
-import { CMS_PATH, CMS_LOGIN_PATH } from '@/app/lib/auth'
+import { CMS_PATH } from '@/app/lib/auth'
 
 export default async function CMSDashboard() {
   const authenticated = await isAuthenticated()
-  if (!authenticated) redirect(CMS_LOGIN_PATH)
+  if (!authenticated) notFound()
 
   const [posts, comments, likes, reactions, askSubmissions] = await Promise.all([
     getAllPosts(),

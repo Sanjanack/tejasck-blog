@@ -74,18 +74,20 @@ export default function PostLikeButton({ postSlug }: PostLikeButtonProps) {
       aria-label={liked ? 'Unlike this post' : 'Like this post'}
     >
       <svg
-        className={`w-5 h-5 transition-transform duration-200 ${toggling ? 'animate-pulse' : ''} ${liked ? 'fill-current' : ''}`}
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-        />
-      </svg>
+  className={`w-5 h-5 transition-all duration-200 ${
+    liked ? 'scale-110 fill-current' : 'scale-100'
+  } ${toggling ? 'animate-pulse' : ''}`}
+  viewBox="0 0 24 24"
+  fill={liked ? 'currentColor' : 'none'}
+  stroke="currentColor"
+>
+  <path
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    strokeWidth={2}
+    d="M12 21s-6.5-4.35-9-7.5C1.5 10.5 3 6.5 6.5 5.5c2-.5 3.5.5 5.5 2.5 2-2 3.5-3 5.5-2.5C21 6.5 22.5 10.5 21 13.5c-2.5 3.15-9 7.5-9 7.5z"
+  />
+</svg>
       <span className="text-sm font-medium">
         {count} {count === 1 ? 'like' : 'likes'}
       </span>

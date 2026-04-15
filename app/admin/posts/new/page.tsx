@@ -1,10 +1,10 @@
 import { isAuthenticated } from '@/app/lib/auth'
-import { redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import PostEditor from '../PostEditor'
 
 export default async function NewPostPage() {
   const authenticated = await isAuthenticated()
-  if (!authenticated) redirect('/admin/login')
+  if (!authenticated) notFound()
 
   return (
     <PostEditor
@@ -16,7 +16,7 @@ export default async function NewPostPage() {
           date: new Date().toISOString().slice(0, 10),
           excerpt: '',
           tags: [],
-          series: 'Letters from Schmalkalden',
+          series: 'From Filter Coffee to German Bread',
         },
         content: '',
       }}

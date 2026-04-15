@@ -1,13 +1,12 @@
 import { prisma } from '@/app/lib/prisma'
 import { isAuthenticated } from '@/app/lib/auth'
-import { redirect } from 'next/navigation'
-import Link from 'next/link'
+import { notFound } from 'next/navigation'
 export default async function AdminCommentsPage() {
   // Check authentication
   const authenticated = await isAuthenticated()
   
   if (!authenticated) {
-    redirect('/admin/login')
+    notFound()
   }
 
   const comments = await prisma.comment.findMany({

@@ -1,18 +1,19 @@
 import { prisma } from '@/app/lib/prisma'
 import { isAuthenticated } from '@/app/lib/auth'
-import { redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getAllPosts } from '@/app/lib/posts'
+import { IconBook, IconComments, IconHeart } from '@/app/components/Icons'
 
 export default async function AdminPostsPage() {
   // Check authentication
   const authenticated = await isAuthenticated()
   
   if (!authenticated) {
-    redirect('/admin/login')
+    notFound()
   }
 
-  const posts = getAllPosts()
+  const posts = await getAllPosts()
   const allLikes = await prisma.postLike.findMany()
   const allComments = await prisma.comment.findMany()
 
@@ -117,16 +118,16 @@ export default async function AdminPostsPage() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-4 text-sm text-[#718096] dark:text-[#9ca3af]">
-                        <span className="flex items-center gap-1">
-                          <span>❤️</span>
+                        <span className="flex items-center gap-2">
+                          <IconHeart className="w-4 h-4" />
                           {likeCounts.get(post.slug) || 0}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <span>💬</span>
+                        <span className="flex items-center gap-2">
+                          <IconComments className="w-4 h-4" />
                           {commentCounts.get(post.slug) || 0}
                         </span>
-                        <span className="flex items-center gap-1">
-                          <span>📖</span>
+                        <span className="flex items-center gap-2">
+                          <IconBook className="w-4 h-4" />
                           {post.readingTime} min
                         </span>
                       </div>

@@ -1,3 +1,5 @@
+import { IconBook, IconGlobe, IconPin } from '@/app/components/Icons'
+
 export default function AboutPage() {
   return (
     <div className="relative min-h-screen bg-[#faf9f7] dark:bg-[#1a1a1a] pt-16">
@@ -26,7 +28,7 @@ export default function AboutPage() {
           <div className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-2xl p-10 mb-12 animate-slide-up shadow-lg hover:shadow-xl transition-shadow duration-300">
             <div className="text-center mb-10">
               <div className="w-40 h-40 bg-[#f0f4f0] dark:bg-[#2d3a2d] rounded-full mx-auto mb-8 flex items-center justify-center text-6xl animate-bounce-gentle">
-                🇩🇪
+                <IconGlobe className="w-16 h-16 text-[#6b8e6b]" />
               </div>
               <h2 className="text-3xl font-serif font-bold text-[#2d3748] dark:text-[#e5e7eb] mb-4">
                 Hello from Germany!
@@ -59,7 +61,7 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 gap-8 animate-slide-up" style={{animationDelay: '0.2s'}}>
             <div className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-2xl p-8 hover:border-[#6b8e6b] dark:hover:border-[#7a9a7a] transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
               <h3 className="text-2xl font-serif font-bold text-[#2d3748] dark:text-[#e5e7eb] mb-6 flex items-center">
-                <span className="mr-4 text-3xl">📍</span>
+                <IconPin className="mr-4 w-7 h-7 text-[#6b8e6b]" />
                 Location
               </h3>
               <p className="text-[#4a5568] dark:text-[#9ca3af] text-lg leading-relaxed">
@@ -70,7 +72,7 @@ export default function AboutPage() {
             
             <div className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-2xl p-8 hover:border-[#6b8e6b] dark:hover:border-[#7a9a7a] transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
               <h3 className="text-2xl font-serif font-bold text-[#2d3748] dark:text-[#e5e7eb] mb-6 flex items-center">
-                <span className="mr-4 text-3xl">📚</span>
+                <IconBook className="mr-4 w-7 h-7 text-[#6b8e6b]" />
                 Studies
               </h3>
               <p className="text-[#4a5568] dark:text-[#9ca3af] text-lg leading-relaxed">

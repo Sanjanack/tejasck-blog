@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { CMS_PATH } from '@/app/lib/cms-constants'
 import { useTheme } from '@/app/components/ThemeProvider'
+import { IconBook, IconComments, IconDashboard, IconLogout, IconMail, IconMoon, IconPosts, IconSun } from '@/app/components/Icons'
 
 const BASE = CMS_PATH
 
@@ -22,11 +23,11 @@ export default function CMSShell({ children }: { children: React.ReactNode }) {
   }
 
   const nav = [
-    { href: BASE, label: 'Dashboard', icon: '📊' },
-    { href: `${BASE}/posts`, label: 'Posts', icon: '📝' },
-    { href: `${BASE}/comments`, label: 'Comments', icon: '💬' },
-    { href: `${BASE}/ask`, label: 'Ask Submissions', icon: '✉️' },
-    { href: `${BASE}/handbook`, label: 'Handbook', icon: '📖' },
+    { href: BASE, label: 'Dashboard', icon: <IconDashboard className="w-5 h-5" /> },
+    { href: `${BASE}/posts`, label: 'Posts', icon: <IconPosts className="w-5 h-5" /> },
+    { href: `${BASE}/comments`, label: 'Comments', icon: <IconComments className="w-5 h-5" /> },
+    { href: `${BASE}/ask`, label: 'Ask Submissions', icon: <IconMail className="w-5 h-5" /> },
+    { href: `${BASE}/handbook`, label: 'Handbook', icon: <IconBook className="w-5 h-5" /> },
   ]
 
   return (
@@ -78,7 +79,7 @@ export default function CMSShell({ children }: { children: React.ReactNode }) {
                       : 'text-[#4a5568] dark:text-[#9ca3af] hover:bg-[#f7fafc] dark:hover:bg-[#2d2d2d]'
                   }`}
                 >
-                  <span>{item.icon}</span>
+                  <span className="inline-flex">{item.icon}</span>
                   {item.label}
                 </Link>
               ))}
@@ -89,7 +90,7 @@ export default function CMSShell({ children }: { children: React.ReactNode }) {
                 onClick={toggleTheme}
                 className="w-full flex items-center gap-2 px-4 py-2 text-sm text-[#718096] dark:text-[#9ca3af] hover:bg-[#f7fafc] dark:hover:bg-[#2d2d2d] rounded-lg transition-colors"
               >
-                <span>{theme === 'dark' ? '☀️' : '🌙'}</span>
+                {theme === 'dark' ? <IconSun className="w-5 h-5" /> : <IconMoon className="w-5 h-5" />}
                 {theme === 'dark' ? 'Light' : 'Dark'} mode
               </button>
               <form action="/api/cms-x8k2/logout" method="POST">
@@ -97,7 +98,7 @@ export default function CMSShell({ children }: { children: React.ReactNode }) {
                   type="submit"
                   className="w-full flex items-center gap-2 px-4 py-2 text-sm text-[#718096] dark:text-[#9ca3af] hover:text-[#991b1b] dark:hover:text-[#fca5a5] transition-colors rounded-lg hover:bg-[#fef2f2] dark:hover:bg-[#2e1a1a]"
                 >
-                  <span>🚪</span> Log out
+              <span className="inline-flex"><IconLogout className="w-5 h-5" /></span> Log out
                 </button>
               </form>
             </div>
@@ -125,7 +126,7 @@ export default function CMSShell({ children }: { children: React.ReactNode }) {
                 title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
                 className="w-10 h-10 flex items-center justify-center text-lg text-[#718096] dark:text-[#9ca3af] hover:bg-[#f7fafc] dark:hover:bg-[#2d2d2d] rounded-lg"
               >
-                {theme === 'dark' ? '☀️' : '🌙'}
+                {theme === 'dark' ? <IconSun className="w-5 h-5" /> : <IconMoon className="w-5 h-5" />}
               </button>
               <form action="/api/cms-x8k2/logout" method="POST">
                 <button
@@ -133,7 +134,7 @@ export default function CMSShell({ children }: { children: React.ReactNode }) {
                   title="Log out"
                   className="w-10 h-10 flex items-center justify-center text-lg text-[#718096] dark:text-[#9ca3af] hover:text-[#991b1b] dark:hover:text-[#fca5a5] hover:bg-[#fef2f2] dark:hover:bg-[#2e1a1a] rounded-lg"
                 >
-                  🚪
+                  <IconLogout className="w-5 h-5" />
                 </button>
               </form>
             </div>

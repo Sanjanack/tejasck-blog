@@ -1,12 +1,11 @@
 import { prisma } from '@/app/lib/prisma'
 import { isAuthenticated } from '@/app/lib/auth'
-import { redirect } from 'next/navigation'
-import { CMS_PATH, CMS_LOGIN_PATH } from '@/app/lib/auth'
+import { notFound } from 'next/navigation'
 
 export default async function CMSCommentsPage() {
   const authenticated = await isAuthenticated()
   if (!authenticated) {
-    redirect(CMS_LOGIN_PATH)
+    notFound()
   }
 
   const allComments = await prisma.comment.findMany({

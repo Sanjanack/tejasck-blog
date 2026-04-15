@@ -5,8 +5,8 @@ interface PostNavigationProps {
   currentSlug: string
 }
 
-export default function PostNavigation({ currentSlug }: PostNavigationProps) {
-  const posts = getAllPosts()
+export default async function PostNavigation({ currentSlug }: PostNavigationProps) {
+  const posts = await getAllPosts()
   const currentIndex = posts.findIndex((post) => post.slug === currentSlug)
   
   const previousPost = currentIndex > 0 ? posts[currentIndex - 1] : null

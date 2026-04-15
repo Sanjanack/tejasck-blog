@@ -49,7 +49,7 @@ export async function readPostFile(slug: string): Promise<{
     date: String(data.date || '').trim() || new Date().toISOString().slice(0, 10),
     excerpt: String(data.excerpt || '').trim() || '',
     tags,
-    series: String(data.series || '').trim() || 'Letters from Schmalkalden',
+    series: String(data.series || '').trim() || 'From Filter Coffee to German Bread',
     coverImage: data.coverImage ? String(data.coverImage).trim() : undefined,
     coverImageAlt: data.coverImageAlt ? String(data.coverImageAlt).trim() : undefined,
   }
@@ -65,7 +65,7 @@ export async function writePostFile(slug: string, frontmatter: EditableFrontmatt
     title: String(frontmatter.title || '').trim() || 'Untitled',
     date: String(frontmatter.date || '').trim() || new Date().toISOString().slice(0, 10),
     excerpt: String(frontmatter.excerpt || '').trim() || '',
-    series: String(frontmatter.series || '').trim() || 'Letters from Schmalkalden',
+    series: String(frontmatter.series || '').trim() || 'From Filter Coffee to German Bread',
   }
 
   const tags = (frontmatter.tags || []).map((t) => String(t).trim()).filter(Boolean)

@@ -1,15 +1,16 @@
 import { prisma } from '@/app/lib/prisma'
 import { isAuthenticated } from '@/app/lib/auth'
-import { redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getAllPosts } from '@/app/lib/posts'
-import { CMS_PATH, CMS_LOGIN_PATH } from '@/app/lib/auth'
+import { CMS_PATH } from '@/app/lib/auth'
+import { IconComments, IconHeart } from '@/app/components/Icons'
 
 export default async function CMSPostsPage() {
   const authenticated = await isAuthenticated()
-  if (!authenticated) redirect(CMS_LOGIN_PATH)
+  if (!authenticated) notFound()
 
-  const posts = getAllPosts()
+  const posts = await getAllPosts()
   const [allLikes, allComments] = await Promise.all([
     prisma.postLike.findMany(),
     prisma.comment.findMany(),
@@ -48,7 +49,16 @@ export default async function CMSPostsPage() {
                     <Link href={`/blog/${post.slug}`} className="font-medium text-[#2d3748] dark:text-[#e5e7eb] hover:text-[#6b8e6b]">{post.title}</Link>
                   </td>
                   <td className="px-6 py-4 text-sm text-[#4a5568] dark:text-[#9ca3af]">{new Date(post.date).toLocaleDateString()}</td>
-                  <td className="px-6 py-4 text-sm text-[#718096] dark:text-[#9ca3af]">❤️ {likeCounts.get(post.slug) || 0} · 💬 {commentCounts.get(post.slug) || 0}</td>
+                  <td className="px-6 py-4 text-sm text-[#718096] dark:text-[#9ca3af]">
+                    <span className="inline-flex items-center gap-2 mr-3">
+                      <IconHeart className="w-4 h-4" />
+                      {likeCounts.get(post.slug) || 0}
+                    </span>
+                    <span className="inline-flex items-center gap-2">
+                      <IconComments className="w-4 h-4" />
+                      {commentCounts.get(post.slug) || 0}
+                    </span>
+                  </td>
                   <td className="px-6 py-4">
                     <Link href={`/blog/${post.slug}`} className="text-sm text-[#6b8e6b] hover:underline mr-2">View</Link>
                     <Link href={`${CMS_PATH}/posts/${post.slug}/edit`} className="text-sm text-[#5b7c99] hover:underline">Edit</Link>

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/app/lib/prisma'
 import { cookies } from 'next/headers'
 
-const REACTION_TYPES = ['like', 'love', 'laugh', 'wow', 'sad', 'angry'] as const
+const REACTION_TYPES = ['like', 'love', 'linsightful'] as const
 
 async function getUserId(): Promise<string> {
   const cookieStore = await cookies()

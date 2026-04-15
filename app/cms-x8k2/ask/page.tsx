@@ -1,11 +1,10 @@
 import { prisma } from '@/app/lib/prisma'
 import { isAuthenticated } from '@/app/lib/auth'
-import { redirect } from 'next/navigation'
-import { CMS_LOGIN_PATH } from '@/app/lib/auth'
+import { notFound } from 'next/navigation'
 
 export default async function CMSAskPage() {
   const authenticated = await isAuthenticated()
-  if (!authenticated) redirect(CMS_LOGIN_PATH)
+  if (!authenticated) notFound()
 
   const submissions = await prisma.askSubmission.findMany({
     orderBy: { createdAt: 'desc' },

@@ -2,13 +2,15 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { getPostBySlug, getPostContent, getAllPosts } from '../../lib/posts'
+import { unstable_noStore as noStore } from 'next/cache'
+import { getPostBySlug, getPostContent, getAllPosts, headingToId } from '../../lib/posts'
 import Comments from '../../components/Comments'
 import ReadingProgress from '../../components/ReadingProgress'
 import PostReactions from '../../components/PostReactions'
 import PostTags from '../../components/PostTags'
 import SocialShare from '../../components/SocialShare'
 import PostNavigation from '../../components/PostNavigation'
+import PostTableOfContents from '../../components/PostTableOfContents'
 
 interface PostPageProps {
   params: {
@@ -17,7 +19,7 @@ interface PostPageProps {
 }
 
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
-  const post = getPostBySlug(params.slug)
+  const post = await getPostBySlug(params.slug)
   
   if (!post) {
     return {
@@ -62,13 +64,18 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
 }
 
 export default async function PostPage({ params }: PostPageProps) {
-  const post = getPostBySlug(params.slug)
+  if (process.env.NODE_ENV !== 'production') {
+    noStore()
+  }
+
+  const post = await getPostBySlug(params.slug)
   
   if (!post) {
     notFound()
   }
 
   const content = await getPostContent(post.content)
+  const headings = extractHeadingsFromMarkdown(post.content)
 
   return (
     <>
@@ -78,7 +85,7 @@ export default async function PostPage({ params }: PostPageProps) {
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#6b8e6b]/5 blur-3xl dark:bg-[#7a9a7a]/5" />
           <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#5b7c99]/5 blur-3xl dark:bg-[#6b8e9f]/5" />
         </div>
-        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="mb-8 animate-fade-in">
             <Link
               href="/blog"
@@ -117,7 +124,7 @@ export default async function PostPage({ params }: PostPageProps) {
               )}
               <div className="mb-4">
                 <span className="inline-flex items-center gap-2 rounded-full border border-[#6b8e6b] dark:border-[#7a9a7a] bg-[#f0f4f0] dark:bg-[#2d3a2d] px-4 py-1.5 text-sm font-semibold text-[#6b8e6b] dark:text-[#7a9a7a]">
-                  Letters from Schmalkalden
+                  {post.series || 'From Filter Coffee to German Bread'}
                 </span>
               </div>
               <h1 className="text-5xl sm:text-6xl font-serif font-bold text-[#2d3748] dark:text-[#e5e7eb] mb-6 leading-tight">
@@ -138,10 +145,7 @@ export default async function PostPage({ params }: PostPageProps) {
                       })}
                     </time>
                   </div>
-                  <div className="flex gap-1">
-                    {['📚', '✍️', '🇩🇪'].map((emoji, i) => (
-                      <span key={i} className="text-lg">{emoji}</span>
-                    ))}
+                  <div className="flex items-center gap-3 text-[#6b8e6b] dark:text-[#7a9a7a]">
                   </div>
                 </div>
                 <div className="text-sm text-[#718096] dark:text-[#9ca3af]">
@@ -151,15 +155,23 @@ export default async function PostPage({ params }: PostPageProps) {
             </div>
           </header>
 
-          {post.tags && post.tags.length > 0 && (
-            <div className="mb-8">
-              <PostTags tags={post.tags} postSlug={post.slug} />
-            </div>
-          )}
+          <div className="grid lg:grid-cols-[minmax(0,3fr)_minmax(0,1fr)] gap-8 items-start">
+            <div>
+              {post.tags && post.tags.length > 0 && (
+                <div className="mb-8">
+                  <PostTags tags={post.tags} postSlug={post.slug} />
+                </div>
+              )}
 
-          <article className="prose prose-lg max-w-none bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-2xl p-8 animate-slide-up shadow-lg" style={{animationDelay: '0.2s'}}>
-            <div dangerouslySetInnerHTML={{ __html: content }} />
-          </article>
+              <article
+                className="prose prose-lg max-w-none bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-2xl p-8 animate-slide-up shadow-lg"
+                style={{ animationDelay: '0.2s' }}
+              >
+                <div dangerouslySetInnerHTML={{ __html: content }} />
+              </article>
+            </div>
+            <PostTableOfContents headings={headings} />
+          </div>
 
           <div className="mt-8 mb-8">
             <PostReactions postSlug={params.slug} />
@@ -208,11 +220,37 @@ export default async function PostPage({ params }: PostPageProps) {
   )
 }
 
+function extractHeadingsFromMarkdown(markdown: string) {
+  const lines = markdown.split('\n')
+  const headings: { text: string; level: 2 | 3; id: string }[] = []
+  const usedIds = new Set<string>()
+
+  for (const raw of lines) {
+    const line = raw.trim()
+    const match = /^(#{2,3})\s+(.+)$/.exec(line)
+    if (match) {
+      const level = match[1].length as 2 | 3
+      const text = match[2].replace(/#+$/, '').trim()
+      let baseId = headingToId(text)
+      if (!baseId) baseId = `section-${level}`
+      let uniqueId = baseId
+      let i = 2
+      while (usedIds.has(uniqueId)) {
+        uniqueId = `${baseId}-${i++}`
+      }
+      usedIds.add(uniqueId)
+      headings.push({ level, text, id: uniqueId })
+    }
+  }
+
+  return headings
+}
+
 // Enable static generation with revalidation
 export const revalidate = 60 // Revalidate every 60 seconds
 
 export async function generateStaticParams() {
-  const posts = getAllPosts()
+  const posts = await getAllPosts()
   return posts.map((post) => ({
     slug: post.slug,
   }))

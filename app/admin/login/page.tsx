@@ -2,10 +2,10 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 
 export default function LoginPage() {
   const router = useRouter()
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -19,7 +19,7 @@ export default function LoginPage() {
       const response = await fetch('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ username, password }),
       })
 
       const data = await response.json()
@@ -28,7 +28,7 @@ export default function LoginPage() {
         router.push('/admin')
         router.refresh()
       } else {
-        setError(data.error || 'Invalid password')
+        setError(data.error || 'Invalid username or password')
       }
     } catch (err) {
       setError('Something went wrong. Please try again.')
@@ -46,11 +46,29 @@ export default function LoginPage() {
               Admin Login
             </h1>
             <p className="text-[#718096] dark:text-[#9ca3af] text-sm">
-              Enter password to access comment management
+              Enter username and password to access comment management
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-[#4a5568] dark:text-[#9ca3af] mb-2"
+              >
+                Username
+              </label>
+              <input
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg bg-white dark:bg-[#1f1f1f] border border-[#e2e8f0] dark:border-[#4a5568] text-[#2d3748] dark:text-[#e5e7eb] placeholder-[#a0aec0] focus:outline-none focus:ring-2 focus:ring-[#6b8e6b]"
+                placeholder="Enter admin username"
+                required
+                autoComplete="username"
+              />
+            </div>
             <div>
               <label
                 htmlFor="password"
