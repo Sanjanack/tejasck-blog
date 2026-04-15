@@ -10,9 +10,9 @@ export type GalleryImage = {
 export const galleryImages: GalleryImage[] = [
   {
     id: 1,
-    src: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600&q=70',
-    alt: 'Schmalkalden town square',
-    caption: 'The charming cobblestone streets of Schmalkalden',
+    src: '/gallery/brother-sunset-1.jpeg',
+    alt: 'Frosty field at sunrise in Schmalkalden',
+    caption: 'Cold morning light over a frost-covered field in Schmalkalden'
   },
   {
     id: 2,
