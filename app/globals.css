@@ -220,3 +220,14 @@ body {
   transform: translateY(-4px);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
+
+/* Expand article width when TOC is collapsed */
+@media (min-width: 768px) {
+  .post-content-layout.toc-collapsed {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .post-content-layout.toc-collapsed > aside {
+    display: none !important;
+  }
+}

@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { unstable_noStore as noStore } from 'next/cache'
 import { getPostBySlug, getPostContent, getAllPosts, headingToId } from '../../lib/posts'
+import { normalizeImageSrc } from '../../lib/imagePaths'
 import Comments from '../../components/Comments'
 import ReadingProgress from '../../components/ReadingProgress'
 import PostReactions from '../../components/PostReactions'
@@ -33,7 +34,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
   
   // Generate OG image URL (you can customize this)
   const ogImage =
-    post.coverImage ||
+    normalizeImageSrc(post.coverImage) ||
     `${process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com'}/api/og?title=${encodeURIComponent(post.title)}`
 
   return {
@@ -110,10 +111,10 @@ export default async function PostPage({ params }: PostPageProps) {
 
           <header className="mb-16 animate-slide-up">
             <div className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-2xl p-8 shadow-lg">
-              {post.coverImage && (
+              {normalizeImageSrc(post.coverImage) && (
                 <div className="mb-6 overflow-hidden rounded-xl border border-[#e2e8f0] dark:border-[#4a5568]">
                   <Image
-                    src={post.coverImage}
+                    src={normalizeImageSrc(post.coverImage) as string}
                     alt={post.coverImageAlt || post.title}
                     width={1600}
                     height={900}
@@ -155,8 +156,9 @@ export default async function PostPage({ params }: PostPageProps) {
             </div>
           </header>
 
-          <div className="grid lg:grid-cols-[minmax(0,3fr)_minmax(0,1fr)] gap-8 items-start">
-            <div>
+          <div id="post-content-layout" className="post-content-layout grid md:grid-cols-[18rem_minmax(0,1fr)] gap-8 items-start">
+            <PostTableOfContents headings={headings} />
+            <div className="min-w-0">
               {post.tags && post.tags.length > 0 && (
                 <div className="mb-8">
                   <PostTags tags={post.tags} postSlug={post.slug} />
@@ -170,7 +172,6 @@ export default async function PostPage({ params }: PostPageProps) {
                 <div dangerouslySetInnerHTML={{ __html: content }} />
               </article>
             </div>
-            <PostTableOfContents headings={headings} />
           </div>
 
           <div className="mt-8 mb-8">

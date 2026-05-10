@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { isAuthenticated } from '@/app/lib/auth'
 import { revalidatePath } from 'next/cache'
 import { prisma } from '@/app/lib/prisma'
+import { isValidImagePath, normalizeImageSrc } from '@/app/lib/imagePaths'
 import { normalizeSlug, writePostFile } from '@/app/lib/postFiles'
 
 export const runtime = 'nodejs'
@@ -13,7 +14,7 @@ const FrontmatterSchema = z.object({
   excerpt: z.string().default(''),
   tags: z.array(z.string()).optional().default([]),
   series: z.string().default('From Filter Coffee to German Bread'),
-  coverImage: z.string().url().optional(),
+  coverImage: z.string().optional().refine((value) => isValidImagePath(value), 'Cover image must be an absolute URL or start with /'),
   coverImageAlt: z.string().optional(),
 })
 
@@ -31,6 +32,7 @@ export async function POST(request: Request) {
     const body = await request.json()
     const parsed = CreateSchema.parse(body)
     const slug = normalizeSlug(parsed.slug)
+    const coverImage = normalizeImageSrc(parsed.frontmatter.coverImage)
 
     const date = new Date(parsed.frontmatter.date || new Date().toISOString().slice(0, 10))
     const excerpt =
@@ -46,7 +48,7 @@ export async function POST(request: Request) {
         content: parsed.content || '',
         tags: parsed.frontmatter.tags || [],
         series: parsed.frontmatter.series || 'From Filter Coffee to German Bread',
-        coverImage: parsed.frontmatter.coverImage || null,
+        coverImage: coverImage || null,
         coverImageAlt: parsed.frontmatter.coverImageAlt || null,
       },
     })
@@ -61,7 +63,7 @@ export async function POST(request: Request) {
           excerpt,
           tags: parsed.frontmatter.tags || [],
           series: parsed.frontmatter.series || 'From Filter Coffee to German Bread',
-          coverImage: parsed.frontmatter.coverImage || undefined,
+          coverImage: coverImage || undefined,
           coverImageAlt: parsed.frontmatter.coverImageAlt || undefined,
         },
         parsed.content || ''

@@ -18,7 +18,7 @@ Here’s a simple checklist based on what actually matters.
 
 ## What documents should you carry?
 
-Keep both **originals and copies**.
+Keep both originals and copies.
 
 - Passport  
 - Visa  
@@ -28,7 +28,6 @@ Keep both **originals and copies**.
 - Academic Documents (10th, 12th, Degree, Transcripts)  
 - Health Insurance Proof  
 - Blocked Account Confirmation  
-- Accommodation Details  
 - Flight Tickets  
 
 Tip: Keep scanned copies on your phone and email as backup.
@@ -70,7 +69,7 @@ Don’t overpack — but don’t miss essentials.
 
 ## One important tip
 
-Start looking for accommodation as early as possible.  
+Start your accommodation search early. Apply for university dorms during the admission process itself to increase your chances or be ready to have temporary stay.
 It’s much easier to secure a place before arriving in Germany.
 
 ---

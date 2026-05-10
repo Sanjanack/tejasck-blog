@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { isAuthenticated } from '@/app/lib/auth'
 import { revalidatePath } from 'next/cache'
+import { isValidImagePath, normalizeImageSrc } from '@/app/lib/imagePaths'
 import { prisma } from '@/app/lib/prisma'
 import { deletePostFile, writePostFile } from '@/app/lib/postFiles'
 
@@ -13,7 +14,7 @@ const FrontmatterSchema = z.object({
   excerpt: z.string().default(''),
   tags: z.array(z.string()).optional().default([]),
   series: z.string().default('From Filter Coffee to German Bread'),
-  coverImage: z.string().url().optional(),
+  coverImage: z.string().optional().refine((value) => isValidImagePath(value), 'Cover image must be an absolute URL or start with /'),
   coverImageAlt: z.string().optional(),
 })
 
@@ -59,6 +60,7 @@ export async function PUT(request: Request, { params }: { params: { slug: string
   try {
     const body = await request.json()
     const parsed = UpdateSchema.parse(body)
+    const coverImage = normalizeImageSrc(parsed.frontmatter.coverImage)
 
     const date = new Date(parsed.frontmatter.date || new Date().toISOString().slice(0, 10))
     const excerpt =
@@ -74,7 +76,7 @@ export async function PUT(request: Request, { params }: { params: { slug: string
         content: parsed.content || '',
         tags: parsed.frontmatter.tags || [],
         series: parsed.frontmatter.series || 'From Filter Coffee to German Bread',
-        coverImage: parsed.frontmatter.coverImage || null,
+        coverImage: coverImage || null,
         coverImageAlt: parsed.frontmatter.coverImageAlt || null,
       },
     })
@@ -89,7 +91,7 @@ export async function PUT(request: Request, { params }: { params: { slug: string
           excerpt,
           tags: parsed.frontmatter.tags || [],
           series: parsed.frontmatter.series || 'From Filter Coffee to German Bread',
-          coverImage: parsed.frontmatter.coverImage || undefined,
+          coverImage: coverImage || undefined,
           coverImageAlt: parsed.frontmatter.coverImageAlt || undefined,
         },
         parsed.content || ''

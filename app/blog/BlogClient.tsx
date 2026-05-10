@@ -2,11 +2,12 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import SearchBar from '../components/SearchBar'
 import PostTags from '../components/PostTags'
 import { IconBook, IconDocument, IconGlobe } from '../components/Icons'
+import { normalizeImageSrc } from '../lib/imagePaths'
 
 export interface PostClient {
   slug: string
@@ -19,6 +20,21 @@ export interface PostClient {
   series?: string
   coverImage?: string
   coverImageAlt?: string
+}
+
+function slugifySection(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+}
+
+function scrollToSection(id: string) {
+  const el = document.getElementById(id)
+  if (!el) return
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  window.history.replaceState(null, '', `#${id}`)
 }
 
 function BlogClientContent({ posts }: { posts: PostClient[] }) {
@@ -95,7 +111,7 @@ function BlogClientContent({ posts }: { posts: PostClient[] }) {
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#5b7c99]/5 blur-3xl dark:bg-[#6b8e9f]/5" />
       </div>
       
-      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-16 animate-fade-in">
           <div className="inline-flex items-center gap-2 rounded-full border border-[#cbd5e0] bg-white/80 backdrop-blur-sm px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#5b7c99] dark:border-[#4a5568] dark:bg-[#252525]/80 dark:text-[#9ca3af] mb-6">
             From Filter Coffee to German Bread
@@ -210,9 +226,10 @@ function BlogClientContent({ posts }: { posts: PostClient[] }) {
               {allSeries.map((series) => {
                 const seriesPosts = postsBySeries[series] || []
                 if (seriesPosts.length === 0) return null
+                const sectionId = `series-${slugifySection(series)}`
 
                 return (
-                  <div key={series} className="animate-fade-in">
+                  <section key={series} id={sectionId} className="animate-fade-in scroll-mt-28">
                     <div className="mb-8 pb-4 border-b border-[#e2e8f0] dark:border-[#4a5568]">
                       <h2 className="text-4xl sm:text-4xl font-serif font-bold text-[#2d3748] dark:text-[#e5e7eb] mb-2 inline-flex items-center gap-3">
                         {series}
@@ -226,20 +243,19 @@ function BlogClientContent({ posts }: { posts: PostClient[] }) {
                             <IconDocument className="w-4 h-4 text-[#6b8e6b] dark:text-[#7a9a7a]" />
                             Series contents
                           </p>
-                          <ul className="space-y-1.5">
-                            {seriesPosts.slice(0, 3).map((post) => (
-                              <li key={post.slug} className="flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 rounded-full bg-[#6b8e6b] dark:bg-[#7a9a7a]" />
-                                <Link href={`/blog/${post.slug}`} className="hover:underline line-clamp-2">
+                          <ul className="space-y-2 rounded-xl border border-[#e2e8f0] bg-[#f8fbf8] p-4 dark:border-[#4a5568] dark:bg-[#1f2b1f]/50">
+                            {seriesPosts.map((post) => (
+                              <li key={post.slug} className="flex items-start gap-3">
+                                <span className="mt-2 h-2 w-2 rounded-full bg-[#6b8e6b] dark:bg-[#7a9a7a]" />
+                                <button
+                                  type="button"
+                                  onClick={() => scrollToSection(`post-${post.slug}`)}
+                                  className="text-left text-sm font-medium text-[#2d3748] hover:text-[#6b8e6b] hover:underline dark:text-[#e5e7eb] dark:hover:text-[#7a9a7a]"
+                                >
                                   {post.title}
-                                </Link>
+                                </button>
                               </li>
                             ))}
-                            {seriesPosts.length > 3 && (
-                              <li className="text-[11px] text-[#718096] dark:text-[#9ca3af]">
-                                +{seriesPosts.length - 3} more
-                              </li>
-                            )}
                           </ul>
                         </div>
                       )}
@@ -248,15 +264,16 @@ function BlogClientContent({ posts }: { posts: PostClient[] }) {
                       {seriesPosts.map((post, index) => (
                         <article
                           key={post.slug}
+                          id={`post-${post.slug}`}
                           className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-xl p-8 hover:border-[#6b8e6b] dark:hover:border-[#7a9a7a] transition-all duration-300 hover:shadow-md animate-slide-up"
                           style={{ animationDelay: `${index * 0.1}s` }}
                         >
                           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
                             <div className="flex-1">
-                              {post.coverImage && (
+                              {normalizeImageSrc(post.coverImage) && (
                                 <div className="mb-5 overflow-hidden rounded-xl border border-[#e2e8f0] dark:border-[#4a5568]">
                                   <Image
-                                    src={post.coverImage}
+                                    src={normalizeImageSrc(post.coverImage) as string}
                                     alt={post.coverImageAlt || post.title}
                                     width={1200}
                                     height={675}
@@ -328,11 +345,10 @@ function BlogClientContent({ posts }: { posts: PostClient[] }) {
                         </article>
                       ))}
                     </div>
-                  </div>
+                  </section>
                 )
               })}
             </div>
-
           </div>
         ) : (
           // Show flat list when filters are active
@@ -345,10 +361,10 @@ function BlogClientContent({ posts }: { posts: PostClient[] }) {
               >
                 <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
                   <div className="flex-1">
-                    {post.coverImage && (
+                    {normalizeImageSrc(post.coverImage) && (
                       <div className="mb-5 overflow-hidden rounded-xl border border-[#e2e8f0] dark:border-[#4a5568]">
                         <Image
-                          src={post.coverImage}
+                          src={normalizeImageSrc(post.coverImage) as string}
                           alt={post.coverImageAlt || post.title}
                           width={1200}
                           height={675}
