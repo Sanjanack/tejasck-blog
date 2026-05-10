@@ -16,8 +16,8 @@ function validateComment(body: any) {
   if (!result.name || result.name.length > 100) {
     errors.name = ['Name is required and must be <= 100 chars']
   }
-  if (!result.message || result.message.length < 5 || result.message.length > 1000) {
-    errors.message = ['Message must be between 5 and 1000 chars']
+  if (!result.message) {
+    errors.message = ['Message is required']
   }
 
   return { ok: Object.keys(errors).length === 0, data: result, errors }

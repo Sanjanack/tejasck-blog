@@ -5,12 +5,13 @@ import { useEffect, useMemo, useState } from 'react'
 const REACTIONS = [
   { type: 'like', icon: '👍', label: 'Like' },
   { type: 'love', icon: '❤️', label: 'Love' },
-  { type: 'insightful', icon: '💡', label: 'Insightful' },
+  { type: 'laugh', icon: '😂', label: 'Laugh' },
 ] as const
 
 type ReactionType = (typeof REACTIONS)[number]['type']
 
 export default function PostReactions({ postSlug }: { postSlug: string }) {
+  // Render immediately (no blocking spinner); update counts after fetch.
   const [loading, setLoading] = useState(true)
   const [updating, setUpdating] = useState(false)
   const [counts, setCounts] = useState<Record<string, number>>({})
@@ -109,15 +110,6 @@ export default function PostReactions({ postSlug }: { postSlug: string }) {
     }
   }
 
-  if (loading) {
-    return (
-      <div className="flex items-center gap-2 text-[#718096] dark:text-[#9ca3af]">
-        <div className="w-5 h-5 border-2 border-[#e2e8f0] dark:border-[#4a5568] border-t-transparent rounded-full animate-spin" />
-        <span className="text-sm">Loading reactions...</span>
-      </div>
-    )
-  }
-
   return (
     <div className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-2xl p-5 shadow-sm">
       <div className="flex items-center justify-between gap-4 flex-wrap">
@@ -144,7 +136,9 @@ export default function PostReactions({ postSlug }: { postSlug: string }) {
         </div>
 
         <div className="flex items-center gap-3">
-          <span className="text-sm text-[#718096] dark:text-[#9ca3af]">{total} reactions</span>
+          <span className="text-sm text-[#718096] dark:text-[#9ca3af]">
+            {total} reactions{loading ? '…' : ''}
+          </span>
         </div>
       </div>
 
