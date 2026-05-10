@@ -61,7 +61,13 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3 group">
             <div className="w-11 h-11 bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-lg flex items-center justify-center text-2xl group-hover:scale-105 transition-transform duration-300 shadow-sm">
-              ✦
+              <img
+                src="/brand/logo.svg"
+                alt="Tejas C.K Studio"
+                className="w-8 h-8"
+                loading="eager"
+                decoding="async"
+              />
             </div>
             <div className="flex flex-col leading-tight">
               <span className="text-base font-semibold tracking-wide text-[#2d3748] dark:text-[#e5e7eb] group-hover:text-[#6b8e6b] dark:group-hover:text-[#7a9a7a] transition-colors duration-300">

@@ -27,8 +27,14 @@ export default function AboutPage() {
         <div className="max-w-4xl mx-auto">
           <div className="bg-white dark:bg-[#252525] border border-[#e2e8f0] dark:border-[#4a5568] rounded-2xl p-10 mb-12 animate-slide-up shadow-lg hover:shadow-xl transition-shadow duration-300">
             <div className="text-center mb-10">
-              <div className="w-40 h-40 bg-[#f0f4f0] dark:bg-[#2d3a2d] rounded-full mx-auto mb-8 flex items-center justify-center text-6xl animate-bounce-gentle">
-                <IconGlobe className="w-16 h-16 text-[#6b8e6b]" />
+              <div className="w-40 h-40 bg-[#f0f4f0] dark:bg-[#2d3a2d] rounded-full mx-auto mb-8 flex items-center justify-center overflow-hidden animate-bounce-gentle">
+                <img
+                  src="/about/profile.jpeg"
+                  alt="Profile photo"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
               <h2 className="text-3xl font-serif font-bold text-[#2d3748] dark:text-[#e5e7eb] mb-4">
                 Hello from Germany!

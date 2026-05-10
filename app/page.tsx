@@ -53,6 +53,14 @@ export default async function Home() {
         {/* Hero Section */}
         <header className="text-center space-y-8 mb-24">
           <div className="inline-flex items-center gap-2 rounded-full border border-[#cbd5e0] bg-white/80 backdrop-blur-sm px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#5b7c99] dark:border-[#4a5568] dark:bg-[#252525]/80 dark:text-[#9ca3af] animate-fade-in">
+            <img
+              src="/brand/logo.svg"
+              alt=""
+              className="w-4 h-4"
+              aria-hidden="true"
+              loading="eager"
+              decoding="async"
+            />
             Tejas C.K Studio
           </div>
           

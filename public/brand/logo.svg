@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="Sparkle logo">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6b8e6b"/>
+      <stop offset="1" stop-color="#5b7c99"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Match the simple ✦ sparkle silhouette (filled) -->
+  <path
+    d="M128 64
+       C137 94 145 104 176 112
+       C145 120 137 130 128 160
+       C119 130 111 120 80 112
+       C111 104 119 94 128 64Z"
+    fill="url(#g)"
+  />
+</svg>
