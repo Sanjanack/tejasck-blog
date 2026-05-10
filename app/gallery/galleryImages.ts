@@ -12,37 +12,37 @@ export const galleryImages: GalleryImage[] = [
     id: 1,
     src: '/gallery/brother-sunset-1.jpeg',
     alt: 'Frosty field at sunrise in Schmalkalden',
-    caption: 'Cold morning light over a frost-covered field in Schmalkalden'
+    caption: 'Cold morning light over a football ground in Schmalkalden'
   },
   {
     id: 2,
-    src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=70',
-    alt: 'German architecture',
-    caption: 'Historic half-timbered houses lining the streets',
+    src: '/gallery/brother-lake.jpeg',
+    alt: 'Abandoned lake',
+    caption: 'An abandoned lake caught in beauty!',
   },
   {
     id: 3,
-    src: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=600&q=70',
-    alt: 'University campus',
-    caption: 'The beautiful university campus nestled in nature',
+    src: '/gallery/brother-cityscape.jpeg',
+    alt: 'Cityscape',
+    caption: 'Schmalkalden Cityscape viewed after a trek',
   },
   {
     id: 4,
-    src: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&q=70',
-    alt: 'Mountain view',
-    caption: 'Stunning views from the surrounding hills',
+    src: '/galllery/brother-naturalsilhoute.jpeg',
+    alt: 'Natural Silhoute',
+    caption: 'Stunning natural silhoute amongst natural sky gradient',
   },
   {
     id: 5,
-    src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=70',
-    alt: 'Local cafe',
-    caption: 'Cozy cafes perfect for studying and relaxing',
+    src: '/gallery/randomroad.jpeg',
+    alt: 'Radom Road Stroll',
+    caption: 'Random Road during a radom stroll across the city',
   },
   {
     id: 6,
-    src: 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=600&q=70',
-    alt: 'Evening lights',
-    caption: 'Evening atmosphere in the town center',
+    src: '/gallery/housearchitecture.jpeg',
+    alt: 'House Architecture',
+    caption: 'Germany and its house architecture',
   },
 ]
 
