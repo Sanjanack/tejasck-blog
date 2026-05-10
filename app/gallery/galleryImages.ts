@@ -22,7 +22,7 @@ export const galleryImages: GalleryImage[] = [
   },
   {
     id: 3,
-    src: '/galllery/brother-naturesilhoute.jpeg',
+    src: '/gallery/brother-naturesilhoute.jpeg',
     alt: 'Natural Silhoute',
     caption: 'Stunning natural silhoute amongst natural sky gradient',
   },
@@ -34,7 +34,7 @@ export const galleryImages: GalleryImage[] = [
   },
   {
     id: 5,
-    src: '/galllery/brother-naturesilhoute.jpeg',
+    src: '/gallery/brother-naturesilhoute.jpeg',
     alt: 'Natural Silhoute',
     caption: 'Stunning natural silhoute amongst natural sky gradient',
   },
