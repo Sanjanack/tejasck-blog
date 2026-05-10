@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { CMS_PATH } from '@/app/lib/cms-constants'
 import { useTheme } from '@/app/components/ThemeProvider'
-import { IconBook, IconComments, IconDashboard, IconLogout, IconMail, IconMoon, IconPosts, IconSun } from '@/app/components/Icons'
+import { IconBook, IconComments, IconDashboard, IconGlobe, IconLogout, IconMail, IconMoon, IconPosts, IconSun } from '@/app/components/Icons'
 
 const BASE = CMS_PATH
 
@@ -27,6 +27,7 @@ export default function CMSShell({ children }: { children: React.ReactNode }) {
     { href: `${BASE}/posts`, label: 'Posts', icon: <IconPosts className="w-5 h-5" /> },
     { href: `${BASE}/comments`, label: 'Comments', icon: <IconComments className="w-5 h-5" /> },
     { href: `${BASE}/ask`, label: 'Ask Submissions', icon: <IconMail className="w-5 h-5" /> },
+    { href: `${BASE}/gallery`, label: 'Gallery', icon: <IconGlobe className="w-5 h-5" /> },
     { href: `${BASE}/handbook`, label: 'Handbook', icon: <IconBook className="w-5 h-5" /> },
   ]
 
