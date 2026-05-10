@@ -35,7 +35,15 @@ export default function AskPage() {
       })
       const data = await res.json()
       if (!res.ok || !data.ok) {
-        throw new Error('Failed to submit')
+        const msg =
+          data?.error ||
+          (data?.errors
+            ? Object.entries(data.errors as Record<string, string[]>)
+                .flatMap(([k, v]) => (Array.isArray(v) ? v.map((s) => `${k}: ${s}`) : []))
+                .join(' · ')
+            : null) ||
+          'Failed to submit'
+        throw new Error(msg)
       }
       setStatus('success')
       setName('')

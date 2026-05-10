@@ -20,8 +20,8 @@ function validateAsk(body: any) {
   if (!data.subject || data.subject.length < 3 || data.subject.length > 200) {
     errors.subject = ['Subject must be between 3 and 200 chars']
   }
-  if (!data.message || data.message.length < 10 || data.message.length > 5000) {
-    errors.message = ['Message must be between 10 and 5000 chars']
+  if (!data.message || data.message.length > 5000) {
+    errors.message = ['Message is required and must be <= 5000 chars']
   }
   if (data.email && !isValidEmail(data.email)) {
     errors.email = ['Invalid email']
