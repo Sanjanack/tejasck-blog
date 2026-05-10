@@ -34,18 +34,12 @@ export const galleryImages: GalleryImage[] = [
   },
   {
     id: 5,
-    src: '/gallery/brother-naturesilhoute.jpeg',
-    alt: 'Natural Silhoute',
-    caption: 'Stunning natural silhoute amongst natural sky gradient',
-  },
-  {
-    id: 6,
     src: '/gallery/brother-randomroad.jpeg',
     alt: 'Radom Road Stroll',
     caption: 'Random Road during a radom stroll across the city',
   },
   {
-    id: 7,
+    id: 6,
     src: '/gallery/brother-housearchitecture.jpeg',
     alt: 'House Architecture',
     caption: 'Germany and its house architecture',
