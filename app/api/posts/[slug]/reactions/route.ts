@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/app/lib/prisma'
 import { cookies } from 'next/headers'
+import { getClientIp, rateLimit } from '@/app/lib/security'
 
 const REACTION_TYPES = ['like', 'love', 'laugh'] as const
 type ReactionType = (typeof REACTION_TYPES)[number]
@@ -102,6 +103,14 @@ export async function POST(
   { params }: { params: { slug: string } }
 ) {
   try {
+    const ip = getClientIp(request)
+    const rl = rateLimit(`post-reaction:${ip}:${params.slug}`, { windowMs: 60_000, max: 30 })
+    if (!rl.ok) {
+      const res = NextResponse.json({ ok: false, error: 'Too many requests. Please slow down.' }, { status: 429 })
+      res.headers.set('Retry-After', String(Math.ceil(rl.retryAfterMs / 1000)))
+      return res
+    }
+
     const userId = await getUserId()
     const postSlug = params.slug
     const body = await request.json()

@@ -51,6 +51,11 @@ const nextConfig = {
             key: 'Referrer-Policy',
             value: 'origin-when-cross-origin'
           },
+          {
+            // Lock down powerful browser features by default.
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=()'
+          },
         ],
       },
     ]

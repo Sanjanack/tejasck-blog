@@ -326,9 +326,16 @@ export const getAllPosts = maybeCache(async (): Promise<Post[]> => {
 
   await syncFilesystemToDatabaseInDevIfNeeded()
 
-  const rows = await prisma.post.findMany({
-    orderBy: { date: 'asc' },
-  })
+  let rows: any[]
+  try {
+    rows = await prisma.post.findMany({
+      orderBy: { date: 'asc' },
+    })
+  } catch (e) {
+    // If DB is sleeping/unreachable during build (or transient outage), keep the site working.
+    console.error('Error loading posts from DB; falling back to filesystem:', e)
+    return getAllPostsFromFilesystem()
+  }
 
   const posts = rows.map((row) => {
     const content = row.content
@@ -362,9 +369,15 @@ export const getPostBySlug = maybeCache(async (slug: string): Promise<Post | nul
 
   await syncFilesystemToDatabaseInDevIfNeeded()
 
-  const row = await prisma.post.findUnique({
-    where: { slug },
-  })
+  let row: any
+  try {
+    row = await prisma.post.findUnique({
+      where: { slug },
+    })
+  } catch (e) {
+    console.error('Error loading post from DB; falling back to filesystem:', e)
+    return getPostBySlugFromFilesystem(slug)
+  }
 
   if (!row) return null
 

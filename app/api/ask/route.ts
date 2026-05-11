@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { prisma } from '@/app/lib/prisma'
+import { applyBasicCors, getClientIp, rateLimit } from '@/app/lib/security'
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
 function isValidEmail(email: string) {
@@ -32,6 +33,14 @@ function validateAsk(body: any) {
 
 export async function POST(request: Request) {
   try {
+    const ip = getClientIp(request)
+    const rl = rateLimit(`ask:${ip}`, { windowMs: 60_000, max: 5 })
+    if (!rl.ok) {
+      const res = NextResponse.json({ ok: false, error: 'Too many requests. Please try again shortly.' }, { status: 429 })
+      res.headers.set('Retry-After', String(Math.ceil(rl.retryAfterMs / 1000)))
+      return applyBasicCors(res, request)
+    }
+
     const contentType = request.headers.get('content-type') || ''
     let payload: Record<string, unknown>
     if (contentType.includes('application/json')) {
@@ -43,7 +52,7 @@ export async function POST(request: Request) {
 
     const parsed = validateAsk(payload)
     if (!parsed.ok) {
-      return NextResponse.json({ ok: false, errors: parsed.errors }, { status: 400 })
+      return applyBasicCors(NextResponse.json({ ok: false, errors: parsed.errors }, { status: 400 }), request)
     }
 
     const { name = '', email = '', subject, message, ref } = parsed.data
@@ -61,18 +70,22 @@ export async function POST(request: Request) {
 
     if (toRecipients.length > 0 && process.env.RESEND_API_KEY) {
       await resend?.emails.send({
-        from: 'Ask Bot <noreply@yourdomain.dev>',
+        from: `Ask Bot <${process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev'}>`,
         to: toRecipients,
         subject: `New Ask submission: ${subject}`,
         text: `New Ask submission\n\nSubject: ${subject}\nFrom: ${name || 'Anonymous'}${email ? ` <${email}>` : ''}\nRef: ${ref || '-'}\n\n${message}\n\nID: ${saved.id} | ${saved.createdAt.toISOString()}`,
       })
     }
 
-    return NextResponse.json({ ok: true })
+    return applyBasicCors(NextResponse.json({ ok: true }), request)
   } catch (error) {
     console.error('Error handling ask submission', error)
-    return NextResponse.json({ ok: false, error: 'Failed to submit' }, { status: 500 })
+    return applyBasicCors(NextResponse.json({ ok: false, error: 'Failed to submit' }, { status: 500 }), request)
   }
+}
+
+export async function OPTIONS(request: Request) {
+  return applyBasicCors(new NextResponse(null, { status: 204 }), request)
 }
 
 

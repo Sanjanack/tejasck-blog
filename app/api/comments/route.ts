@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/app/lib/prisma'
+import { applyBasicCors, getClientIp, rateLimit } from '@/app/lib/security'
 
 function validateComment(body: any) {
   const errors: Record<string, string[]> = {}
@@ -29,7 +30,7 @@ export async function GET(request: Request) {
     const postSlug = searchParams.get('postSlug')
     
     if (!postSlug) {
-      return NextResponse.json({ ok: false, error: 'Post slug required' }, { status: 400 })
+      return applyBasicCors(NextResponse.json({ ok: false, error: 'Post slug required' }, { status: 400 }), request)
     }
 
     const comments = await prisma.comment.findMany({
@@ -65,19 +66,27 @@ export async function GET(request: Request) {
       })
     }
 
-    return NextResponse.json({ ok: true, comments: transformComments(comments) })
+    return applyBasicCors(NextResponse.json({ ok: true, comments: transformComments(comments) }), request)
   } catch (error) {
     console.error('Error fetching comments', error)
-    return NextResponse.json({ ok: false, error: 'Failed to fetch comments' }, { status: 500 })
+    return applyBasicCors(NextResponse.json({ ok: false, error: 'Failed to fetch comments' }, { status: 500 }), request)
   }
 }
 
 export async function POST(request: Request) {
   try {
+    const ip = getClientIp(request)
+    const rl = rateLimit(`comments:${ip}`, { windowMs: 60_000, max: 12 })
+    if (!rl.ok) {
+      const res = NextResponse.json({ ok: false, error: 'Too many comments. Please slow down.' }, { status: 429 })
+      res.headers.set('Retry-After', String(Math.ceil(rl.retryAfterMs / 1000)))
+      return applyBasicCors(res, request)
+    }
+
     const body = await request.json()
     const parsed = validateComment(body)
     if (!parsed.ok) {
-      return NextResponse.json({ ok: false, errors: parsed.errors }, { status: 400 })
+      return applyBasicCors(NextResponse.json({ ok: false, errors: parsed.errors }, { status: 400 }), request)
     }
 
     const { postSlug, name, message, parentId } = parsed.data
@@ -91,9 +100,13 @@ export async function POST(request: Request) {
       }
     })
 
-    return NextResponse.json({ ok: true, comment })
+    return applyBasicCors(NextResponse.json({ ok: true, comment }), request)
   } catch (error) {
     console.error('Error creating comment', error)
-    return NextResponse.json({ ok: false, error: 'Failed to create comment' }, { status: 500 })
+    return applyBasicCors(NextResponse.json({ ok: false, error: 'Failed to create comment' }, { status: 500 }), request)
   }
+}
+
+export async function OPTIONS(request: Request) {
+  return applyBasicCors(new NextResponse(null, { status: 204 }), request)
 }
